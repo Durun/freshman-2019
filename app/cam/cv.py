@@ -80,7 +80,7 @@ class GrayImage(Image):
         """
         ２値化
         """
-        binImg = cv2.adaptiveThreshold(
+        self.data = cv2.adaptiveThreshold(
             src=self.data,
             maxValue=255,
             adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
@@ -88,7 +88,7 @@ class GrayImage(Image):
             blockSize=11,
             C=2
         )
-        return binImg
+        return self
 
     def morphology(self, method: int, kernelSize: int) -> GrayImage:
         """
@@ -100,12 +100,12 @@ class GrayImage(Image):
         shape = (kernelSize) * 2
         kernel = numpy.ones(shape,
                             dtype=numpy.uint8)
-        img = cv2.morphologyEx(
+        self.data = cv2.morphologyEx(
             src=self.data,
             op=method,
             kernel=kernel
         )
-        return img
+        return self
 
     def morph_erode(self, kernelSize: int) -> GrayImage:
         return self.morphology(cv2.MORPH_ERODE, kernelSize)
