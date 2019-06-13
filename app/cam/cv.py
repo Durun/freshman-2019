@@ -8,14 +8,15 @@ class Image(metaclass=ABCMeta):  # abstract class
         raise NotImplementedError
 
     def __init__(self, img):
-        self.img = img
+        nDim = img.ndim
         expectedNDim = type(self).nChannel()
-        if self.img.ndim != expectedNDim:
+        if nDim != expectedNDim:
             message = """
             画像のチャンネル数が異なるため初期化できません.
             img.ndim=%d (expected=%d)
-            """ % (self.img.ndim, expectedNDim)
+            """ % (nDim, expectedNDim)
             raise AssertionError(message)
+        self.img = img
 
     def show(self, windowName: str) -> None:
         cv2.imshow(windowName, self.img)
