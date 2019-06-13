@@ -13,7 +13,7 @@ class Image(metaclass=ABCMeta):  # abstract class
         if nDim != expectedNDim:
             message = """
             画像のチャンネル数が異なるため初期化できません.
-            img.ndim=%d (expected=%d)
+            nDim=%d (expected=%d)
             """ % (nDim, expectedNDim)
             raise AssertionError(message)
         self.img = img
