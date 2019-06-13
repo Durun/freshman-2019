@@ -40,6 +40,16 @@ class GrayImage(Image):
     def resize(self, scale) -> GrayImage:
         return super().resize(scale)
 
+    def binarize(self) -> GrayImage:
+        binImg = cv2.adaptiveThreshold(
+            src=self.data,
+            maxValue=255,
+            adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            thresholdType=cv2.THRESH_BINARY,
+            blockSize=11,
+            C=2)
+        return binImg
+
 
 class ColorImage(Image):
     @classmethod
