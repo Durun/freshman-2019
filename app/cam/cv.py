@@ -16,10 +16,10 @@ class Image(metaclass=ABCMeta):  # abstract class
             nDim=%d (expected=%d)
             """ % (nDim, expectedNDim)
             raise AssertionError(message)
-        self.img = img
+        self.data = img
 
     def show(self, windowName: str) -> None:
-        cv2.imshow(windowName, self.img)
+        cv2.imshow(windowName, self.data)
 
 
 class GrayImage(Image):
@@ -34,5 +34,5 @@ class ColorImage(Image):
         return 3
 
     def toGray(self) -> GrayImage:
-        grayImg = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        grayImg = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
         return GrayImage(grayImg)
