@@ -25,17 +25,29 @@ class Image(metaclass=ABCMeta):  # abstract class
     def show(self, windowName: str) -> None:
         cv2.imshow(windowName, self.data)
 
+    def resize(self, scale):
+        self.data = cv2.resize(self.data, None,
+                               fx=scale, fy=scale,
+                               interpolation=cv2.INTER_CUBIC)
+        return self
+
 
 class GrayImage(Image):
     @classmethod
     def nChannel(cls) -> int:
         return 2
 
+    def resize(self, scale) -> GrayImage:
+        return super().resize(scale)
+
 
 class ColorImage(Image):
     @classmethod
     def nChannel(cls) -> int:
         return 3
+
+    def resize(self, scale) -> ColorImage:
+        return super().resize(scale)
 
     def toGray(self) -> GrayImage:
         grayImg = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
