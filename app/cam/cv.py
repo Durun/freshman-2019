@@ -86,8 +86,38 @@ class GrayImage(Image):
             adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
             thresholdType=cv2.THRESH_BINARY,
             blockSize=11,
-            C=2)
+            C=2
+        )
         return binImg
+
+    def morphology(self, method: int, kernelSize: int) -> GrayImage:
+        """
+        モルフォロジー変換
+        see also
+        --------
+        http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html
+        """
+        shape = (kernelSize) * 2
+        kernel = numpy.ones(shape,
+                            dtype=numpy.uint8)
+        img = cv2.morphologyEx(
+            src=self.data,
+            op=method,
+            kernel=kernel
+        )
+        return img
+
+    def morph_erode(self, kernelSize: int) -> GrayImage:
+        return self.morphology(cv2.MORPH_ERODE, kernelSize)
+
+    def morph_dilate(self, kernelSize: int) -> GrayImage:
+        return self.morphology(cv2.MORPH_DILATE, kernelSize)
+
+    def morph_open(self, kernelSize: int) -> GrayImage:
+        return self.morphology(cv2.MORPH_OPEN, kernelSize)
+
+    def morph_close(self, kernelSize: int) -> GrayImage:
+        return self.morphology(cv2.MORPH_CLOSE, kernelSize)
 
 
 class ColorImage(Image):
