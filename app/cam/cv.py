@@ -1,8 +1,12 @@
+from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 import cv2
+import numpy
 
 
 class Image(metaclass=ABCMeta):  # abstract class
+    data: numpy.ndarray
+
     @classmethod
     def nChannel(cls) -> int:
         raise NotImplementedError
