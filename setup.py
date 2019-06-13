@@ -8,7 +8,7 @@ setup(
     install_requires=[],
     entry_points={
         'console_scripts': [
-            'freshman2019=app.__main__:main',
+            'freshman2019=freshman2019.__main__:main',
         ],
     },
 )
