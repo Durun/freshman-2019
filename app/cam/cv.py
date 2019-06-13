@@ -119,6 +119,21 @@ class GrayImage(Image):
     def morph_close(self, kernelSize: int) -> GrayImage:
         return self.morphology(cv2.MORPH_CLOSE, kernelSize)
 
+    def blur_median(self, kernelSize: int) -> GrayImage:
+        """
+        中央値フィルタ
+        kernelSizeは奇数とすること.
+        see also
+        --------
+        http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_filtering/py_filtering.html#id6
+        """
+
+        assert (kernelSize % 2) == 1, """
+        kernelSizeは奇数でなければなりません.(given= %d) """ % kernelSize
+
+        self.data = cv2.medianBlur(self.data, kernelSize)
+        return self
+
 
 class ColorImage(Image):
     """
