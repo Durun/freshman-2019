@@ -65,7 +65,7 @@ class GrayImage(Image):
     def nChannel(cls) -> int:
         return 2
 
-    def resize(self, scale) -> GrayImage:
+    def resize(self, scale: float) -> GrayImage:
         """
         拡大・縮小
 
@@ -103,7 +103,7 @@ class ColorImage(Image):
     def nChannel(cls) -> int:
         return 3
 
-    def resize(self, scale) -> ColorImage:
+    def resize(self, scale: float) -> ColorImage:
         """
         拡大・縮小
 
