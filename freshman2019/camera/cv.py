@@ -24,6 +24,12 @@ class Image(metaclass=ABCMeta):  # abstract class
     def nChannel(cls) -> int:
         raise NotImplementedError
 
+    def toGray(self) -> GrayImage:
+        """
+        グレースケール画像へ変換
+        """
+        raise NotImplementedError
+
     def __init__(self, img):
         nDim = img.ndim
         expectedNDim = type(self).nChannel()
@@ -64,6 +70,12 @@ class GrayImage(Image):
     @classmethod
     def nChannel(cls) -> int:
         return 2
+
+    def toGray(self) -> GrayImage:
+        """
+        グレースケール画像へ変換
+        """
+        return self
 
     def resize(self, scale: float) -> GrayImage:
         """
