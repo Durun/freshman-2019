@@ -1,7 +1,7 @@
 import cv2
 from typing import List
 from .feature import Feature
-from .match_points import KnnMatchPairs
+from .match_pairs import KnnMatchPairs
 
 
 class Matcher(object):
