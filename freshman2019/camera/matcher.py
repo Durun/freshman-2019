@@ -13,5 +13,5 @@ class Matcher(object):
         self.matcher = matcher
 
     def knnMatch(self, feature1: Feature, feature2: Feature, k: int) -> KnnMatchPairs:
-        matches = self.matcher.knnMatch(feature1, feature2, k)
-        return KnnMatchPairs(matches, k)
+        matches = self.matcher.knnMatch(feature1.des, feature2.des, k)
+        return KnnMatchPairs(feature1, feature2, matches, k)
