@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import cv2
 import os
+import logging
 from .color_image import ColorImage
 
 
@@ -30,6 +31,7 @@ class FileImageReader(ImageReader):
 
     def read(self) -> ColorImage:
         data = cv2.imread(self.filePath)
+        logging.info("read %s" % self.filePath)
         return ColorImage(data)
 
 
@@ -41,6 +43,7 @@ class CameraImageReader(ImageReader):
 
     def __init__(self, deviceNumber: int):
         self.capture = cv2.VideoCapture(deviceNumber)
+        logging.info("Initialized camera %d" % deviceNumber)
 
     def read(self) -> ColorImage:
         ret, frame = self.capture.read()
