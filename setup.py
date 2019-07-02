@@ -5,7 +5,9 @@ setup(
     version='0.1.0',
     description='新人課題2019',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        'opencv-python',
+    ],
     entry_points={
         'console_scripts': [
             'freshman2019=freshman2019.__main__:main',
