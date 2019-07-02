@@ -1,4 +1,3 @@
-import cv2
 from .image import Image
 from .feature import Feature
 
