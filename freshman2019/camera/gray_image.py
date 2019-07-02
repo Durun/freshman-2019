@@ -12,9 +12,9 @@ class GrayImage(Image):
     ----------
     Image
     """
-    @classmethod
-    def nChannel(cls) -> int:
-        return 2
+
+    def isNChannelCorrect(self) -> bool:
+        return self.nChannel() == 1
 
     def toGray(self) -> GrayImage:
         """

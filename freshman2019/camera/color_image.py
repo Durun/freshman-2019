@@ -13,9 +13,8 @@ class ColorImage(Image):
     Image
     """
 
-    @classmethod
-    def nChannel(cls) -> int:
-        return 3
+    def isNChannelCorrect(self) -> bool:
+        return self.nChannel() == 3
 
     def resize(self, scale: float) -> ColorImage:
         """

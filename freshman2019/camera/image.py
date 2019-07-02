@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import logging
 import cv2
 import numpy
 
@@ -19,26 +20,33 @@ class Image(metaclass=ABCMeta):  # abstract class
     """
     data: numpy.ndarray
 
-    @classmethod
-    def nChannel(cls) -> int:
-        raise NotImplementedError
-
     def toGray(self):
         """
         グレースケール画像へ変換
         """
         raise NotImplementedError
 
+    def isNChannelCorrect(self) -> bool:
+        raise NotImplementedError
+
     def __init__(self, img):
-        nDim = img.ndim
-        expectedNDim = type(self).nChannel()
-        if nDim != expectedNDim:
+        self.data = img
+        if not self.isNChannelCorrect():
             message = """
             画像のチャンネル数が異なるため初期化できません.
             nDim=%d (expected=%d)
             """ % (nDim, expectedNDim)
             raise AssertionError(message)
-        self.data = img
+        logging.info("new Image %dch %dx%d" %
+                     (self.nChannel(), self.data.shape[0], self.data.shape[1]))
+
+    def nChannel(self) -> int:
+        """
+        チャンネル数を返す
+        """
+        shape = self.data.shape
+        n = shape[2] if len(shape) == 3 else 1
+        return n
 
     def show(self, windowName: str) -> None:
         """
