@@ -1,5 +1,6 @@
 from .image import Image
 from .feature import Feature
+from .matcher import Matcher
 
 
 class Detector(object):
