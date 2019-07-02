@@ -1,6 +1,8 @@
+from __future__ import annotations
 import cv2
 import copy
 from typing import List
+from typing import Callable
 from .image import Image
 from .feature import Feature
 
@@ -32,6 +34,20 @@ class MatchPairs(object):
                                       self.matches,
                                       None, flags=2)
         return newImg
+
+    def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
+        NotImplementedError
+
+    def sort(self) -> MatchPairs:
+        new = copy.copy(self)
+        new.matches = sorted(self.matches, key=lambda x: x.distance)
+        return new
+
+    def first(self, n: int) -> MatchPairs:
+        size = min(n, len(self.matches))
+        new = copy.copy(self)
+        new.matches = self.matches[:size]
+        return new
 
 
 class KnnMatchPairs(object):
