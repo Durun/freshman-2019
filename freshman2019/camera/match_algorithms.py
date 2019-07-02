@@ -12,5 +12,7 @@ class MatchAlgorithm(object):
         self.matcher = matcher
 
 
-ORB = MatchAlgorithm(detector=Detector(cv2.ORB_create()),
-                     matcher=Matcher(cv2.BFMatcher(cv2.NORM_HAMMING)))
+ORB = MatchAlgorithm(
+    detector=Detector(cv2.ORB_create()),
+    matcher=Matcher(cv2.BFMatcher(cv2.NORM_HAMMING))
+)
