@@ -1,5 +1,6 @@
 from __future__ import annotations
 import cv2
+import numpy
 import copy
 from typing import List
 from typing import Callable
@@ -48,6 +49,20 @@ class MatchPairs(object):
         new = copy.copy(self)
         new.matches = self.matches[:size]
         return new
+
+    def findHomography(self):
+        srcKp = self.feature1.kp
+        dstKp = self.feature2.kp
+
+        matches = self.matches
+        srcKps = [srcKp[m.queryIdx].pt for m in matches]
+        dstKps = [dstKp[m.trainIdx].pt for m in matches]
+
+        srcPts = numpy.float32(srcKps).reshape(-1, 1, 2)
+        dstPts = numpy.float32(dstKps).reshape(-1, 1, 2)
+
+        h, mask = cv2.findHomography(srcPts, dstPts, cv2.RANSAC)
+        return h
 
 
 class KnnMatchPairs(object):
