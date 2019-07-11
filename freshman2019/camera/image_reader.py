@@ -59,7 +59,8 @@ class UrlImageReader(ImageReader):
 
     @staticmethod
     def __createEmptyFile(suffix="") -> IO[Any]:
-        newFile = tempfile.NamedTemporaryFile(mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
+        newFile = tempfile.NamedTemporaryFile(
+            mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
         logging.info("Created tempfile : " + newFile.name)
         return newFile
 
@@ -97,10 +98,20 @@ class CameraImageReader(ImageReader):
     """
     capture: cv2.VideoCapture
 
+    bufferSize = 1
+
     def __init__(self, deviceNumber: int):
         self.capture = cv2.VideoCapture(deviceNumber)
+        self.capture.set(cv2.CAP_PROP_BUFFERSIZE, self.__class__.bufferSize)
         logging.info("Initialized camera %d" % deviceNumber)
 
+    def flush(self) -> None:
+        n = self.__class__.bufferSize
+        for i in range(n):
+            self.capture.read()
+        return
+
     def read(self) -> ColorImage:
+        self.flush()
         ret, frame = self.capture.read()
         return ColorImage(frame)
