@@ -42,6 +42,12 @@ class FileImageReader(ImageReader):
 class UrlImageReader(ImageReader):
     """
     URLからColorImageをreadするもの.
+
+    Fields
+    ------
+    file: IO[Any]
+        画像を保存する一時ファイル.
+        インスタンス終了時に自動で削除されます.
     """
     url: str
     file: IO[Any]
