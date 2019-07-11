@@ -1,5 +1,4 @@
 import cv2
-from freshman2019.camera.color_image import ColorImage
 from freshman2019.camera.image_reader import UrlImageReader
 
 reader = UrlImageReader(
