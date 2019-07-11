@@ -39,6 +39,10 @@ class GrayImage(Image):
         """
         return super().resize(scale)
 
+    def warp(self, homography) -> GrayImage:
+        height, width = self.data.shape
+        return self._warp(homography, width=width, height=height)
+
     def binarize(self) -> GrayImage:
         """
         ２値化

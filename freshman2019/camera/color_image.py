@@ -39,3 +39,7 @@ class ColorImage(Image):
         """
         grayImg = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
         return GrayImage(grayImg)
+
+    def warp(self, homography) -> ColorImage:
+        height, width, _ = self.data.shape
+        return self._warp(homography, width=width, height=height)

@@ -76,3 +76,11 @@ class Image(metaclass=ABCMeta):  # abstract class
         logging.info("new copy-Image %dch %dx%d" %
                      (self.nChannel(), self.data.shape[0], self.data.shape[1]))
         return copy.deepcopy(self)
+
+    def warp(self, homography):
+        raise NotImplementedError
+
+    def _warp(self, homography, width, height):
+        shape = (width, height)
+        self.data = cv2.warpPerspective(self.data, homography, shape)
+        return self
