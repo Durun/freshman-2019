@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List, Optional
 import cv2
 import numpy
 from .image import Image
@@ -39,7 +40,7 @@ class GrayImage(Image):
         """
         return super().resize(scale)
 
-    def warp(self, homography) -> GrayImage:
+    def warp(self, homography: Optional[List[float]]) -> GrayImage:
         height, width = self.data.shape
         return self._warp(homography, width=width, height=height)
 

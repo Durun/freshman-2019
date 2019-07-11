@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import List, Optional
 import logging
 import cv2
 import numpy
@@ -77,10 +78,11 @@ class Image(metaclass=ABCMeta):  # abstract class
                      (self.nChannel(), self.data.shape[0], self.data.shape[1]))
         return copy.deepcopy(self)
 
-    def warp(self, homography):
+    def warp(self, homography: Optional[List[float]]):
         raise NotImplementedError
 
-    def _warp(self, homography, width, height):
+    def _warp(self, homography: Optional[List[float]], width: int, height: int):
         shape = (width, height)
-        self.data = cv2.warpPerspective(self.data, homography, shape)
+        if homography is not None:
+            self.data = cv2.warpPerspective(self.data, homography, shape)
         return self

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List, Optional
 import cv2
 from .image import Image
 from .gray_image import GrayImage
@@ -40,6 +41,6 @@ class ColorImage(Image):
         grayImg = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
         return GrayImage(grayImg)
 
-    def warp(self, homography) -> ColorImage:
+    def warp(self, homography: Optional[List[float]]) -> ColorImage:
         height, width, _ = self.data.shape
         return self._warp(homography, width=width, height=height)
