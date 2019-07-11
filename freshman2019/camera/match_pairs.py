@@ -2,7 +2,7 @@ from __future__ import annotations
 import cv2
 import numpy
 import copy
-from typing import List
+from typing import List, Optional
 from typing import Callable
 from .image import Image
 from .feature import Feature
@@ -50,18 +50,21 @@ class MatchPairs(object):
         new.matches = self.matches[:size]
         return new
 
-    def findHomography(self):
+    def findHomography(self) -> Optional[List[float]]:
         srcKp = self.feature1.kp
         dstKp = self.feature2.kp
 
         matches = self.matches
-        srcKps = [srcKp[m.queryIdx].pt for m in matches]
-        dstKps = [dstKp[m.trainIdx].pt for m in matches]
+        if 0 < len(matches):
+            srcKps = [srcKp[m.queryIdx].pt for m in matches]
+            dstKps = [dstKp[m.trainIdx].pt for m in matches]
 
-        srcPts = numpy.float32(srcKps).reshape(-1, 1, 2)
-        dstPts = numpy.float32(dstKps).reshape(-1, 1, 2)
+            srcPts = numpy.float32(srcKps).reshape(-1, 1, 2)
+            dstPts = numpy.float32(dstKps).reshape(-1, 1, 2)
 
-        h, mask = cv2.findHomography(srcPts, dstPts, cv2.RANSAC)
+            h, mask = cv2.findHomography(srcPts, dstPts, cv2.RANSAC)
+        else:
+            h = None
         return h
 
 
