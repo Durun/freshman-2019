@@ -58,7 +58,7 @@ class UrlImageReader(ImageReader):
 
     @staticmethod
     def __createEmptyFile(suffix="") -> IO[Any]:
-        return tempfile.NamedTemporaryFile(mode="w+b", suffix=suffix)
+        return tempfile.NamedTemporaryFile(mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
 
     @staticmethod
     def __getSuffix(response: requests.Response) -> str:
