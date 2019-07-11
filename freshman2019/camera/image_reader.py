@@ -5,6 +5,7 @@ import os
 import tempfile
 import io
 import requests
+from requests import ConnectionError
 import logging
 from .color_image import ColorImage
 
@@ -58,7 +59,9 @@ class UrlImageReader(ImageReader):
 
     @staticmethod
     def __createEmptyFile(suffix="") -> IO[Any]:
-        return tempfile.NamedTemporaryFile(mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
+        newFile = tempfile.NamedTemporaryFile(mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
+        logging.info("Created tempfile : " + newFile.name)
+        return newFile
 
     @staticmethod
     def __getSuffix(response: requests.Response) -> str:
@@ -67,7 +70,12 @@ class UrlImageReader(ImageReader):
         return suffix
 
     def __updateFile(self) -> None:
-        response = requests.get(self.url)
+        try:
+            response = requests.get(self.url)
+        except ConnectionError as err:
+            logging.warn("failed to download from URL: " + self.url)
+            raise err
+        logging.info("Downloaded : " + self.url)
         suffix = self.__getSuffix(response)
         newFile = self.__createEmptyFile(suffix=suffix)
         newFile.write(response.content)
