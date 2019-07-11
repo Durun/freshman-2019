@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 import logging
 import cv2
 import numpy
+import copy
 
 
 class Image(metaclass=ABCMeta):  # abstract class
@@ -19,6 +20,12 @@ class Image(metaclass=ABCMeta):  # abstract class
         画像を表すnumpy配列.
     """
     data: numpy.ndarray
+
+    def copy(self):
+        """
+        自身を複製
+        """
+        raise NotImplementedError
 
     def toGray(self):
         """
@@ -64,3 +71,8 @@ class Image(metaclass=ABCMeta):  # abstract class
                                fx=scale, fy=scale,
                                interpolation=cv2.INTER_CUBIC)
         return self
+
+    def _copy(self):
+        logging.info("new copy-Image %dch %dx%d" %
+                     (self.nChannel(), self.data.shape[0], self.data.shape[1]))
+        return copy.deepcopy(self)

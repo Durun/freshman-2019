@@ -27,6 +27,12 @@ class ColorImage(Image):
         """
         return super().resize(scale)
 
+    def copy(self) -> ColorImage:
+        """
+        自身の複製を返す
+        """
+        return super()._copy()
+
     def toGray(self) -> GrayImage:
         """
         グレースケール画像へ変換

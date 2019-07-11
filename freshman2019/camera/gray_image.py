@@ -16,6 +16,12 @@ class GrayImage(Image):
     def isNChannelCorrect(self) -> bool:
         return self.nChannel() == 1
 
+    def copy(self) -> GrayImage:
+        """
+        自身の複製を返す
+        """
+        return super()._copy()
+
     def toGray(self) -> GrayImage:
         """
         グレースケール画像へ変換
