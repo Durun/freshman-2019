@@ -109,7 +109,7 @@ class GrayImage(Image):
         --------
         http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html#clahe-contrast-limited-adaptive-histogram-equalization
         """
-        tile = (gridSize) * 2
+        tile = tuple([gridSize]) * 2
         normalizer = cv2.createCLAHE(clipLimit=clipLimit,
                                      tileGridSize=tile)
         self.data = normalizer.apply(self.data)
