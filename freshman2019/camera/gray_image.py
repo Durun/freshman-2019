@@ -114,3 +114,10 @@ class GrayImage(Image):
                                      tileGridSize=tile)
         self.data = normalizer.apply(self.data)
         return self
+
+    def denoise(self) -> GrayImage:
+        """
+        ノイズ除去
+        """
+        self.data = cv2.fastNlMeansDenoising(self.data, None, 10, 7, 21)
+        return self
