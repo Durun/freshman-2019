@@ -86,3 +86,17 @@ class Image(metaclass=ABCMeta):  # abstract class
         if homography is not None:
             self.data = cv2.warpPerspective(self.data, homography, shape)
         return self
+
+    def rotate(self, degree: float):
+        raise NotImplementedError
+
+    def _rotate(self, degree: float):
+        size = self.data.shape[0:2]
+        height, width = size
+        center = (height/2, width/2)
+        matrix = cv2.getRotationMatrix2D(center, degree, scale=1.0)
+        self.data = cv2.warpAffine(self.data,
+                                   M=matrix,
+                                   dsize=size,
+                                   flags=cv2.INTER_CUBIC)
+        return self

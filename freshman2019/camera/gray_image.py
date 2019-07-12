@@ -44,6 +44,9 @@ class GrayImage(Image):
         height, width = self.data.shape
         return self._warp(homography, width=width, height=height)
 
+    def rotate(self, degree: float) -> GrayImage:
+        return self._rotate(degree)
+
     def binarize(self) -> GrayImage:
         """
         ２値化

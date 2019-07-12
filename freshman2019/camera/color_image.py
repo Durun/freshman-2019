@@ -44,3 +44,6 @@ class ColorImage(Image):
     def warp(self, homography: Optional[List[float]]) -> ColorImage:
         height, width, _ = self.data.shape
         return self._warp(homography, width=width, height=height)
+
+    def rotate(self, degree: float) -> ColorImage:
+        return self._rotate(degree)
