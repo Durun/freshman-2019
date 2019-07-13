@@ -51,6 +51,15 @@ class MatchPairs(object):
         new.matches = list(filter(predicate, new.matches))
         return new
 
+    def distanceFilter(self, upperBound: float) -> MatchPairs:
+        def pred(match: cv2.DMatch) -> bool: return (match.distance < upperBound)
+        return self.filter(pred)
+
+    def percentileFilter(self, upperBoundPercent: int) -> MatchPairs:
+        distances = self.getDistances()
+        upperBound = numpy.percentile(distances, upperBoundPercent)
+        return self.distanceFilter(upperBound)
+
     def sort(self) -> MatchPairs:
         new = self.copy()
         new.matches = sorted(new.matches, key=lambda x: x.distance)
@@ -78,6 +87,9 @@ class MatchPairs(object):
         else:
             h = None
         return h
+
+    def getDistances(self) -> List[float]:
+        return [m.distance for m in self.matches]
 
 
 class KnnMatchPairs(object):
