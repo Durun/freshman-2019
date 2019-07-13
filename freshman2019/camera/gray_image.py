@@ -105,7 +105,7 @@ class GrayImage(Image):
         self.data = cv2.medianBlur(self.data, kernelSize)
         return self
 
-    def normalize_clahe(self, clipLimit: float, gridSize: int) -> GrayImage:
+    def normalize_clahe(self, clipLimit: float = 2.0, gridSize: int = 8) -> GrayImage:
         """
         ヒストグラム平均化(CLAHE法)
         see also
