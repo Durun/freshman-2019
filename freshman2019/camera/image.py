@@ -45,8 +45,8 @@ class Image(metaclass=ABCMeta):  # abstract class
             nDim=%d (expected=%d)
             """ % (nDim, expectedNDim)
             raise AssertionError(message)
-        logging.info("new Image %dch %dx%d" %
-                     (self.nChannel(), self.data.shape[0], self.data.shape[1]))
+        logging.debug("new Image %dch %dx%d" %
+                      (self.nChannel(), self.data.shape[0], self.data.shape[1]))
 
     def nChannel(self) -> int:
         """
@@ -74,8 +74,8 @@ class Image(metaclass=ABCMeta):  # abstract class
         return self
 
     def _copy(self):
-        logging.info("new copy-Image %dch %dx%d" %
-                     (self.nChannel(), self.data.shape[0], self.data.shape[1]))
+        logging.debug("new copy-Image %dch %dx%d" %
+                      (self.nChannel(), self.data.shape[0], self.data.shape[1]))
         return copy.deepcopy(self)
 
     def warp(self, homography: Optional[List[float]]):
