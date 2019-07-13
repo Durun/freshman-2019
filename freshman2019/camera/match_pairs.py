@@ -47,15 +47,38 @@ class MatchPairs(object):
         return newImg
 
     def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
+        """
+        マッチ結果をフィルタする
+        Parameters
+        ----------
+        predicate: : Callable[[cv2.DMatch], bool]
+            引数 cv2.DMatch の述語
+            偽は除外される
+        """
         new = self.copy()
         new.matches = list(filter(predicate, new.matches))
         return new
 
     def distanceFilter(self, upperBound: float) -> MatchPairs:
+        """
+        マッチ結果をdistance(特徴空間上の距離)でフィルタする
+        Parameters
+        ----------
+        upperBound: float
+            受容されるdistanceの上限
+        """
         def pred(match: cv2.DMatch) -> bool: return (match.distance < upperBound)
         return self.filter(pred)
 
     def percentileFilter(self, upperBoundPercent: int) -> MatchPairs:
+        """
+        マッチ結果をdistance(特徴空間上の距離)の分布をもとに、
+        パーセンタイルでフィルタする
+        Parameters
+        ----------
+        upperBoundPercent: int
+            受容されるパーセンタイルの上限
+        """
         distances = self.getDistances()
         upperBound = numpy.percentile(distances, upperBoundPercent)
         return self.distanceFilter(upperBound)
@@ -89,6 +112,9 @@ class MatchPairs(object):
         return h
 
     def getDistances(self) -> List[float]:
+        """
+        distance(特徴空間上の距離)のリストへ変換する
+        """
         return [m.distance for m in self.matches]
 
 
