@@ -67,7 +67,7 @@ class MatchPairs(object):
         upperBound: float
             受容されるdistanceの上限
         """
-        def pred(match: cv2.DMatch) -> bool: return (match.distance < upperBound)
+        def pred(match: cv2.DMatch) -> bool: return (match.distance <= upperBound)
         return self.filter(pred)
 
     def percentileFilter(self, upperBoundPercent: int) -> MatchPairs:
