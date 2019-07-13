@@ -37,7 +37,9 @@ class MatchPairs(object):
         return newImg
 
     def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
-        NotImplementedError
+        new = copy.copy(self)
+        new.matches = list(filter(predicate, self.matches))
+        return new
 
     def sort(self) -> MatchPairs:
         new = copy.copy(self)
