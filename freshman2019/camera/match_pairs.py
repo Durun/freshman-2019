@@ -48,18 +48,18 @@ class MatchPairs(object):
 
     def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
         new = self.copy()
-        new.matches = list(filter(predicate, self.matches))
+        new.matches = list(filter(predicate, new.matches))
         return new
 
     def sort(self) -> MatchPairs:
         new = self.copy()
-        new.matches = sorted(self.matches, key=lambda x: x.distance)
+        new.matches = sorted(new.matches, key=lambda x: x.distance)
         return new
 
     def first(self, n: int) -> MatchPairs:
-        size = min(n, len(self.matches))
         new = self.copy()
-        new.matches = self.matches[:size]
+        size = min(n, len(new.matches))
+        new.matches = new.matches[:size]
         return new
 
     def findHomography(self) -> Optional[List[float]]:
