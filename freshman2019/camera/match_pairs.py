@@ -37,7 +37,7 @@ class MatchPairs(object):
         kp1 = self.feature1.kp
         img2 = self.feature2.img
         kp2 = self.feature2.kp
-        newImg = copy.copy(img2)
+        newImg = img2.copy()
         if newImg.nChannel() == 1:
             newImg.data = cv2.cvtColor(newImg.data, cv2.COLOR_GRAY2BGR)
         newImg.data = cv2.drawMatches(img1.data, kp1,
@@ -47,18 +47,18 @@ class MatchPairs(object):
         return newImg
 
     def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
-        new = copy.copy(self)
+        new = self.copy()
         new.matches = list(filter(predicate, self.matches))
         return new
 
     def sort(self) -> MatchPairs:
-        new = copy.copy(self)
+        new = self.copy()
         new.matches = sorted(self.matches, key=lambda x: x.distance)
         return new
 
     def first(self, n: int) -> MatchPairs:
         size = min(n, len(self.matches))
-        new = copy.copy(self)
+        new = self.copy()
         new.matches = self.matches[:size]
         return new
 
@@ -97,7 +97,7 @@ class KnnMatchPairs(object):
         kp1 = self.feature1.kp
         img2 = self.feature2.img
         kp2 = self.feature2.kp
-        newImg = copy.copy(img2)
+        newImg = img2.copy()
         if newImg.nChannel() == 1:
             newImg.data = cv2.cvtColor(newImg.data, cv2.COLOR_GRAY2BGR)
         newImg.data = cv2.drawMatchesKnn(img1.data, kp1,
