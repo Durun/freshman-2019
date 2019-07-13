@@ -22,6 +22,16 @@ class MatchPairs(object):
         self.feature2 = feature2
         self.matches = matches
 
+    def copy(self) -> MatchPairs:
+        """
+        自身のコピーを返す
+        feature1, feature2は変化しないと仮定.
+        matchesは複製する.
+        """
+        new = copy.copy(self)
+        new.matches = copy.copy(self.matches)
+        return new
+
     def plot(self) -> Image:
         img1 = self.feature1.img
         kp1 = self.feature1.kp
