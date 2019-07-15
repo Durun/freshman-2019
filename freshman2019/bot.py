@@ -61,7 +61,15 @@ class Bot(object):
         """
         エアコン状態確認コマンド
         """
-        raise NotImplementedError()
+
+        # 現在の電源状態確認
+        is_power_on = self.camera.is_power_on()
+        if is_power_on:
+            # 現在の設定温度確認
+            temp = self.camera.get_temperature()
+            reply("現在エアコンはオンで、設定温度は{}度です。".format(temp))
+        else:
+            reply("現在エアコンはオフです。")
 
     def switch(self, on: bool, reply: ReplyType) -> None:
         """
