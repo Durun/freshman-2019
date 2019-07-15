@@ -1,6 +1,9 @@
 import slack
+from typing import Callable
 from .panel import Panel
 from .camera import Camera
+
+ReplyType = Callable[[str], None]
 
 
 class Bot(object):
@@ -54,43 +57,43 @@ class Bot(object):
                 # 不明なコマンド
                 self.usage(*splited[1:], reply=reply)
 
-    def state(self, *args, reply) -> None:
+    def state(self, *args, reply: ReplyType) -> None:
         """
         エアコン状態確認コマンド
         """
         raise NotImplementedError()
 
-    def switch(self, on: bool, reply) -> None:
+    def switch(self, on: bool, reply: ReplyType) -> None:
         """
         エアコン電源操作コマンド
         """
         raise NotImplementedError()
 
-    def mode(self, *args, reply) -> None:
+    def mode(self, *args, reply: ReplyType) -> None:
         """
         モード確認コマンド
         """
         raise NotImplementedError()
 
-    def auto(self, *args, reply) -> None:
+    def auto(self, *args, reply: ReplyType) -> None:
         """
         オートモードコマンド
         """
         raise NotImplementedError()
 
-    def manual(self, *args, reply) -> None:
+    def manual(self, *args, reply: ReplyType) -> None:
         """
         マニュアルモードコマンド
         """
         raise NotImplementedError()
 
-    def temp(self, *args, reply) -> None:
+    def temp(self, *args, reply: ReplyType) -> None:
         """
         温度設定コマンド
         """
         raise NotImplementedError()
 
-    def usage(self, *args, reply) -> None:
+    def usage(self, *args, reply: ReplyType) -> None:
         """
         使い方コマンド
         """
