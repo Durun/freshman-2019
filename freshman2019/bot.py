@@ -67,7 +67,32 @@ class Bot(object):
         """
         エアコン電源操作コマンド
         """
-        raise NotImplementedError()
+
+        # 現在の電源状態確認
+        current_power = self.camera.is_power_on()
+        if current_power != on:
+            # 電源ボタンを押す
+            self.panel.push_power_button()
+
+            # 成功しているかどうか確認
+            current_power = self.camera.is_power_on()
+            if current_power == on:
+                # 成功
+                if on:
+                    temp = self.camera.get_temperature()
+                    reply("エアコンの電源をつけました。設定温度は{}度です。".format(temp))
+                else:
+                    reply("エアコンの電源を切りました。")
+            else:
+                # 失敗
+                # TODO リトライ
+                reply("エアコンボタンの操作に失敗しました。")
+        else:
+            # 既に指定の電源状態になってる
+            if on:
+                reply("既にエアコンの電源はついています。")
+            else:
+                reply("既にエアコンの電源は切れています。")
 
     def mode(self, *args, reply: ReplyType) -> None:
         """
