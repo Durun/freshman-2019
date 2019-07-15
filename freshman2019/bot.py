@@ -2,6 +2,7 @@ import slack
 from typing import Callable
 from .panel import Panel
 from .camera import Camera
+from .mode import Mode
 
 ReplyType = Callable[[str], None]
 
@@ -13,6 +14,8 @@ class Bot(object):
     api: slack.WebClient
 
     command_list: dict
+
+    mode: Mode
 
     def __init__(self, camera: Camera, panel: Panel, slack_token: str):
         self.camera = camera
@@ -31,6 +34,8 @@ class Bot(object):
             'help': self.usage,
             'usage': self.usage,
         }
+
+        self.mode = Mode.MANUAL
 
         self.rtm.on(event='message', callback=lambda **payload: self.__on_message_received(**payload))
         self.rtm.start()
@@ -106,7 +111,16 @@ class Bot(object):
         """
         モード確認コマンド
         """
-        raise NotImplementedError()
+
+        # 現在の電源状態確認
+        is_power_on = self.camera.is_power_on()
+        if is_power_on:
+            if self.mode == Mode.AUTO:
+                reply("現在、エアコンはオートモードで稼働しています。")
+            else:
+                reply("現在、エアコンはマニュアルモードで稼働しています。")
+        else:
+            reply("現在エアコンは稼働していません。")
 
     def auto(self, *args, reply: ReplyType) -> None:
         """
