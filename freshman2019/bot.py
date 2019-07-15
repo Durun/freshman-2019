@@ -9,6 +9,10 @@ ReplyType = Callable[[str], None]
 MAX_TEMP = 30
 MIN_TEMP = 18
 
+USAGE_TEXT = """
+使い方
+""".strip()
+
 
 class Bot(object):
     camera: Camera
@@ -205,4 +209,5 @@ class Bot(object):
         """
         使い方コマンド
         """
-        raise NotImplementedError()
+
+        reply(USAGE_TEXT)
