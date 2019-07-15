@@ -60,6 +60,7 @@ class Bot(object):
                 command(*splited[1:], reply=reply)
             else:
                 # 不明なコマンド
+                reply("無効な命令です: {}".format(splited[0]))
                 self.usage(*splited[1:], reply=reply)
 
     def state(self, *args, reply: ReplyType) -> None:
