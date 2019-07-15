@@ -130,13 +130,35 @@ class Bot(object):
         """
         オートモードコマンド
         """
-        raise NotImplementedError()
+
+        # 現在の電源状態確認
+        is_power_on = self.camera.is_power_on()
+        if is_power_on:
+            if self.mode == Mode.AUTO:
+                reply("現在、エアコンはオートモードで稼働しています。")
+            else:
+                # モード変更
+                self.mode = Mode.AUTO
+                reply("オートモードに変更しました。")
+        else:
+            reply("現在エアコンは稼働していません。")
 
     def manual(self, *args, reply: ReplyType) -> None:
         """
         マニュアルモードコマンド
         """
-        raise NotImplementedError()
+
+        # 現在の電源状態確認
+        is_power_on = self.camera.is_power_on()
+        if is_power_on:
+            if self.mode == Mode.AUTO:
+                # モード変更
+                self.mode = Mode.MANUAL
+                reply("マニュアルモードに変更しました。")
+            else:
+                reply("現在、エアコンはマニュアルモードで稼働しています。")
+        else:
+            reply("現在エアコンは稼働していません。")
 
     def temp(self, *args, reply: ReplyType) -> None:
         """
