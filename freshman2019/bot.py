@@ -6,6 +6,9 @@ from .mode import Mode
 
 ReplyType = Callable[[str], None]
 
+MAX_TEMP = 30
+MIN_TEMP = 18
+
 
 class Bot(object):
     camera: Camera
@@ -139,7 +142,42 @@ class Bot(object):
         """
         温度設定コマンド
         """
-        raise NotImplementedError()
+
+        if len(args) != 1:
+            reply("コマンドの引数の数が不正です。")
+            return
+
+        # 現在の設定温度確認
+        current_temp = self.camera.get_temperature()
+        delta = 0
+
+        try:
+            # 差分を計算
+            t: str = args[0]
+            if t.startswith("+"):
+                delta = min(int(t.lstrip("+")) + current_temp, MAX_TEMP) - current_temp
+            elif t.startswith("-"):
+                delta = max(current_temp - int(t.lstrip("-")), MIN_TEMP) - current_temp
+            else:
+                delta = max(min(int(t), MAX_TEMP), MIN_TEMP) - current_temp
+        except ValueError:
+            reply("コマンドの引数が不正です。")
+            return
+
+        target_temp = current_temp + delta
+
+        # 温度ボタンを押す
+        self.panel.change_temperature(delta)
+
+        # 温度設定確認
+        current_temp = self.camera.get_temperature()
+        if current_temp == target_temp:
+            # 成功
+            reply("設定温度を{}度にしました。".format(target_temp))
+        else:
+            # 失敗
+            # TODO リトライ
+            reply("温度設定に失敗しました。")
 
     def usage(self, *args, reply: ReplyType) -> None:
         """
