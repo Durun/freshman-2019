@@ -60,14 +60,15 @@ class Bot(object):
 
         asyncio.get_event_loop().run_until_complete(asyncio.gather(t1, t2))
 
-    async def periodic(self):
-        while True and not self.__stop_periodic:
-            print('periodic')
-            await asyncio.sleep(1)
-
     def stop(self):
         self.__stop_periodic = True
         self.rtm.stop()
+
+    async def periodic(self):
+        while True and not self.__stop_periodic:
+            await asyncio.sleep(1)
+            if self.mode == Mode.AUTO:
+                pass
 
     async def __on_message_received(self, **payload):
         data = payload['data']
