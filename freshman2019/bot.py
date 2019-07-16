@@ -1,4 +1,6 @@
 import slack
+import signal
+import asyncio
 from typing import Callable
 from .panel import Panel
 from .camera import Camera
@@ -24,11 +26,13 @@ class Bot(object):
 
     mode: Mode
 
+    __stop_periodic: bool
+
     def __init__(self, camera: Camera, panel: Panel, slack_token: str):
         self.camera = camera
         self.panel = panel
-        self.rtm = slack.RTMClient(token=slack_token)
-        self.api = slack.WebClient(token=slack_token)
+        self.rtm = slack.RTMClient(token=slack_token, run_async=True)
+        self.api = slack.WebClient(token=slack_token, run_async=True)
 
         self.command_list = {
             'state': self.state,
@@ -43,16 +47,34 @@ class Bot(object):
         }
 
         self.mode = Mode.MANUAL
+        self.__stop_periodic = False
 
         self.rtm.on(event='message', callback=lambda **payload: self.__on_message_received(**payload))
-        self.rtm.start()
 
-    def __on_message_received(self, **payload):
+    def start(self):
+        t1 = self.rtm.start()
+        t2 = asyncio.ensure_future(self.periodic())
+
+        for s in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT):
+            asyncio.get_event_loop().add_signal_handler(s, self.stop)
+
+        asyncio.get_event_loop().run_until_complete(asyncio.gather(t1, t2))
+
+    async def periodic(self):
+        while True and not self.__stop_periodic:
+            print('periodic')
+            await asyncio.sleep(1)
+
+    def stop(self):
+        self.__stop_periodic = True
+        self.rtm.stop()
+
+    async def __on_message_received(self, **payload):
         data = payload['data']
 
         # 返信用関数
-        def reply(message: str):
-            self.api.chat_postMessage(
+        async def reply(message: str):
+            await self.api.chat_postMessage(
                 channel=data['channel'],
                 text=message,
             )
@@ -64,13 +86,13 @@ class Bot(object):
             command = self.command_list.get(splited[0])
             if command is not None:
                 # コマンドを実行
-                command(*splited[1:], reply=reply)
+                await command(*splited[1:], reply=reply)
             else:
                 # 不明なコマンド
-                reply("無効な命令です: {}".format(splited[0]))
-                self.usage(*splited[1:], reply=reply)
+                await reply("無効な命令です: {}".format(splited[0]))
+                await self.usage(*splited[1:], reply=reply)
 
-    def state(self, *args, reply: ReplyType) -> None:
+    async def state(self, *args, reply: ReplyType) -> None:
         """
         エアコン状態確認コマンド
         """
@@ -80,11 +102,11 @@ class Bot(object):
         if is_power_on:
             # 現在の設定温度確認
             temp = self.camera.get_temperature()
-            reply("現在エアコンはオンで、設定温度は{}度です。".format(temp))
+            await reply("現在エアコンはオンで、設定温度は{}度です。".format(temp))
         else:
-            reply("現在エアコンはオフです。")
+            await reply("現在エアコンはオフです。")
 
-    def switch(self, on: bool, reply: ReplyType) -> None:
+    async def switch(self, on: bool, reply: ReplyType) -> None:
         """
         エアコン電源操作コマンド
         """
@@ -101,21 +123,21 @@ class Bot(object):
                 # 成功
                 if on:
                     temp = self.camera.get_temperature()
-                    reply("エアコンの電源をつけました。設定温度は{}度です。".format(temp))
+                    await reply("エアコンの電源をつけました。設定温度は{}度です。".format(temp))
                 else:
-                    reply("エアコンの電源を切りました。")
+                    await reply("エアコンの電源を切りました。")
             else:
                 # 失敗
                 # TODO リトライ
-                reply("エアコンボタンの操作に失敗しました。")
+                await reply("エアコンボタンの操作に失敗しました。")
         else:
             # 既に指定の電源状態になってる
             if on:
-                reply("既にエアコンの電源はついています。")
+                await reply("既にエアコンの電源はついています。")
             else:
-                reply("既にエアコンの電源は切れています。")
+                await reply("既にエアコンの電源は切れています。")
 
-    def mode(self, *args, reply: ReplyType) -> None:
+    async def mode(self, *args, reply: ReplyType) -> None:
         """
         モード確認コマンド
         """
@@ -124,13 +146,13 @@ class Bot(object):
         is_power_on = self.camera.is_power_on()
         if is_power_on:
             if self.mode == Mode.AUTO:
-                reply("現在、エアコンはオートモードで稼働しています。")
+                await reply("現在、エアコンはオートモードで稼働しています。")
             else:
-                reply("現在、エアコンはマニュアルモードで稼働しています。")
+                await reply("現在、エアコンはマニュアルモードで稼働しています。")
         else:
-            reply("現在エアコンは稼働していません。")
+            await reply("現在エアコンは稼働していません。")
 
-    def auto(self, *args, reply: ReplyType) -> None:
+    async def auto(self, *args, reply: ReplyType) -> None:
         """
         オートモードコマンド
         """
@@ -139,15 +161,15 @@ class Bot(object):
         is_power_on = self.camera.is_power_on()
         if is_power_on:
             if self.mode == Mode.AUTO:
-                reply("現在、エアコンはオートモードで稼働しています。")
+                await reply("現在、エアコンはオートモードで稼働しています。")
             else:
                 # モード変更
                 self.mode = Mode.AUTO
-                reply("オートモードに変更しました。")
+                await reply("オートモードに変更しました。")
         else:
-            reply("現在エアコンは稼働していません。")
+            await reply("現在エアコンは稼働していません。")
 
-    def manual(self, *args, reply: ReplyType) -> None:
+    async def manual(self, *args, reply: ReplyType) -> None:
         """
         マニュアルモードコマンド
         """
@@ -158,19 +180,19 @@ class Bot(object):
             if self.mode == Mode.AUTO:
                 # モード変更
                 self.mode = Mode.MANUAL
-                reply("マニュアルモードに変更しました。")
+                await reply("マニュアルモードに変更しました。")
             else:
-                reply("現在、エアコンはマニュアルモードで稼働しています。")
+                await reply("現在、エアコンはマニュアルモードで稼働しています。")
         else:
-            reply("現在エアコンは稼働していません。")
+            await reply("現在エアコンは稼働していません。")
 
-    def temp(self, *args, reply: ReplyType) -> None:
+    async def temp(self, *args, reply: ReplyType) -> None:
         """
         温度設定コマンド
         """
 
         if len(args) != 1:
-            reply("コマンドの引数の数が不正です。")
+            await reply("コマンドの引数の数が不正です。")
             return
 
         # 現在の設定温度確認
@@ -187,7 +209,7 @@ class Bot(object):
             else:
                 delta = max(min(int(t), MAX_TEMP), MIN_TEMP) - current_temp
         except ValueError:
-            reply("コマンドの引数が不正です。")
+            await reply("コマンドの引数が不正です。")
             return
 
         target_temp = current_temp + delta
@@ -199,15 +221,15 @@ class Bot(object):
         current_temp = self.camera.get_temperature()
         if current_temp == target_temp:
             # 成功
-            reply("設定温度を{}度にしました。".format(target_temp))
+            await reply("設定温度を{}度にしました。".format(target_temp))
         else:
             # 失敗
             # TODO リトライ
-            reply("温度設定に失敗しました。")
+            await reply("温度設定に失敗しました。")
 
-    def usage(self, *args, reply: ReplyType) -> None:
+    async def usage(self, *args, reply: ReplyType) -> None:
         """
         使い方コマンド
         """
 
-        reply(USAGE_TEXT)
+        await reply(USAGE_TEXT)
