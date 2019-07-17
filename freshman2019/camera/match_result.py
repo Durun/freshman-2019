@@ -8,7 +8,7 @@ from .image import Image
 from .feature import Feature
 
 
-class MatchPairs(object):
+class MatchResult(object):
     """
         特徴点マッチ結果
     """
@@ -22,7 +22,7 @@ class MatchPairs(object):
         self.feature2 = feature2
         self.matches = matches
 
-    def copy(self) -> MatchPairs:
+    def copy(self) -> MatchResult:
         """
         自身のコピーを返す
         feature1, feature2は変化しないと仮定.
@@ -46,7 +46,7 @@ class MatchPairs(object):
                                       None, flags=2)
         return newImg
 
-    def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchPairs:
+    def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchResult:
         """
         マッチ結果をフィルタする
         Parameters
@@ -59,7 +59,7 @@ class MatchPairs(object):
         new.matches = list(filter(predicate, new.matches))
         return new
 
-    def distanceFilter(self, upperBound: float) -> MatchPairs:
+    def distanceFilter(self, upperBound: float) -> MatchResult:
         """
         マッチ結果をdistance(特徴空間上の距離)でフィルタする
         Parameters
@@ -70,7 +70,7 @@ class MatchPairs(object):
         def pred(match: cv2.DMatch) -> bool: return (match.distance <= upperBound)
         return self.filter(pred)
 
-    def percentileFilter(self, upperBoundPercent: int) -> MatchPairs:
+    def percentileFilter(self, upperBoundPercent: int) -> MatchResult:
         """
         マッチ結果をdistance(特徴空間上の距離)の分布をもとに、
         パーセンタイルでフィルタする
@@ -83,12 +83,12 @@ class MatchPairs(object):
         upperBound = numpy.percentile(distances, upperBoundPercent)
         return self.distanceFilter(upperBound)
 
-    def sort(self) -> MatchPairs:
+    def sort(self) -> MatchResult:
         new = self.copy()
         new.matches = sorted(new.matches, key=lambda x: x.distance)
         return new
 
-    def first(self, n: int) -> MatchPairs:
+    def first(self, n: int) -> MatchResult:
         new = self.copy()
         size = min(n, len(new.matches))
         new.matches = new.matches[:size]

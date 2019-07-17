@@ -2,7 +2,7 @@ import cv2
 from typing import List
 from .image import Image
 from .feature import Feature
-from .match_pairs import MatchPairs
+from .match_result import MatchResult
 
 
 class Matcher(object):
@@ -22,6 +22,6 @@ class Matcher(object):
         kp, des = self.detectorAlgorithm.detectAndCompute(image.data, None)
         return Feature(image, kp, des)
 
-    def match(self, feature1: Feature, feature2: Feature) -> MatchPairs:
+    def match(self, feature1: Feature, feature2: Feature) -> MatchResult:
         matches = feature1.match(feature2, self.matcherAlgorithm)
-        return MatchPairs(feature1, feature2, matches)
+        return MatchResult(feature1, feature2, matches)
