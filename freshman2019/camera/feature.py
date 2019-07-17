@@ -1,3 +1,4 @@
+from __future__ import annotations
 import cv2
 import numpy
 import copy
@@ -25,6 +26,10 @@ class Feature(object):
         self.img = img
         self.kp = kp
         self.des = des
+
+    def match(self, that: Feature, matcherAlgorithm: cv2.DescriptorMatcher) -> List[cv2.DMatch]:
+        matches = matcherAlgorithm.match(self.des, that.des)
+        return matches
 
     def plot(self) -> Image:
         newImg = copy.copy(self.img)
