@@ -1,4 +1,4 @@
-from .image_reader import ImageReader, UrlImageReader, CameraImageReader
+from .image import ImageReader, UrlImageReader, CameraImageReader
 from .image import Image
 from .panel_trimmer import PanelTrimmer
 
