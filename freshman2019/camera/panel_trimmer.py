@@ -1,37 +1,30 @@
-from .image import Image
-from .feature import Feature
-from .match_pairs import MatchPairs
-from freshman2019.camera.match_algorithms import ORB
+from .image import Image, GrayImage
+from freshman2019.camera.util import CachingMatcher
+from freshman2019.camera.matching import Matcher, MatchResult
+from freshman2019.camera.matching import ORB
 
 
 class PanelTrimmer(object):
-    trainFeature: Feature
+    matcher: CachingMatcher
 
-    algorithm = ORB
+    def __init__(self, trainImage: Image, matcher: Matcher = ORB):
+        self.matcher = CachingMatcher(matcher, trainImage.toGray())
 
-    def __init__(self, trainImage: Image):
-        self.trainFeature = self.__detectFeature(trainImage.toGray())
-
-    def __detectFeature(self, image: Image) -> Feature:
-        detector = self.__class__.algorithm.detector
-        return detector.detect(image)
-
-    def __matchFeature(self, queryFeature: Feature) -> MatchPairs:
-        matcher = self.__class__.algorithm.matcher
-        return matcher.match(queryFeature, self.trainFeature)
+    def __getMatchResult(self, queryImage: GrayImage) -> MatchResult:
+        result = self.matcher.matchImage(queryImage)
+        return result
 
     def trim(self, queryImage: Image) -> Image:
         query = queryImage.copy().toGray()
-        queryFeature = self.__detectFeature(query)
-
+        query = query.normalize_clahe()
         # match
-        matchPairs = self.__matchFeature(queryFeature)
+        matchResult = self.__getMatchResult(query)
 
         # filter
-        matchPairs = matchPairs.sort()
-        matchPairs = matchPairs.first(10)
+        matchResult = matchResult.percentileFilter(25)  # TODO
+        matchResult = matchResult.first(200)  # TODO
 
         # warp
-        h = matchPairs.findHomography()
+        h = matchResult.findHomography()
         resultImage = queryImage.copy().warp(h)
         return resultImage
