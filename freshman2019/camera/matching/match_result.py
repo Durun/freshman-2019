@@ -4,7 +4,7 @@ import numpy
 import copy
 from typing import List, Optional
 from typing import Callable
-from .image import Image
+from freshman2019.camera.image import Image
 from .feature import Feature
 
 
@@ -17,7 +17,7 @@ class MatchResult(object):
     feature2: Feature
     matches: List[cv2.DMatch]
 
-    def __init__(self, feature1: Feature, feature2: Feature, matches: List[cv2.DMatch],):
+    def __init__(self, feature1: Feature, feature2: Feature, matches: List[cv2.DMatch]):
         self.feature1 = feature1
         self.feature2 = feature2
         self.matches = matches

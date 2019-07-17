@@ -1,6 +1,6 @@
 import cv2
 from typing import List
-from .image import Image
+from freshman2019.camera.image import Image
 from .feature import Feature
 from .match_result import MatchResult
 

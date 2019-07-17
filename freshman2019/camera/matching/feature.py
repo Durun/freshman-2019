@@ -3,7 +3,7 @@ import cv2
 import numpy
 import copy
 from typing import List
-from .image import Image
+from freshman2019.camera.image import Image
 
 
 class Feature(object):
