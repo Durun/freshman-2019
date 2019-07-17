@@ -1,6 +1,6 @@
 import cv2
 from typing import List
-from freshman2019.camera.image import Image
+from freshman2019.camera.image import GrayImage
 from .feature import Feature
 from .match_result import MatchResult
 
@@ -18,7 +18,7 @@ class Matcher(object):
         self.detectorAlgorithm = detectorAlgorithm
         self.matcherAlgorithm = matcherAlgorithm
 
-    def detect(self, image: Image) -> Feature:
+    def detect(self, image: GrayImage) -> Feature:
         kp, des = self.detectorAlgorithm.detectAndCompute(image.data, None)
         return Feature(image, kp, des)
 
