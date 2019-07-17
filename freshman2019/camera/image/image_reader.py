@@ -8,7 +8,10 @@ import requests
 from requests import ConnectionError
 import logging
 from .color_image import ColorImage
-from .recognition_error import RecognitionError
+
+
+class ImageReadError(Exception):
+    "画像読み込み失敗時エラー"
 
 
 class ImageReader(metaclass=ABCMeta):  # abstract class
@@ -116,5 +119,5 @@ class CameraImageReader(ImageReader):
         self.flush()
         ret, frame = self.capture.read()
         if ret == False:
-            raise RecognitionError("can't read image from" + str(self.capture))
+            raise ImageReadError("can't read image from" + str(self.capture))
         return ColorImage(frame)
