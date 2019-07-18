@@ -76,7 +76,7 @@ class GrayImage(Image):
         --------
         http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html
         """
-        shape = (kernelSize) * 2
+        shape = tuple([kernelSize]) * 2
         kernel = numpy.ones(shape,
                             dtype=numpy.uint8)
         self.data = cv2.morphologyEx(
