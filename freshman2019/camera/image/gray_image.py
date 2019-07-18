@@ -76,7 +76,7 @@ class GrayImage(Image):
         --------
         http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html
         """
-        shape = tuple([kernelSize]) * 2
+        shape = tuple([kernelSize]) * 2  # type : Tuple[int, int]
         kernel = numpy.ones(shape,
                             dtype=numpy.uint8)
         self.data = cv2.morphologyEx(
@@ -120,7 +120,7 @@ class GrayImage(Image):
         --------
         http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html#clahe-contrast-limited-adaptive-histogram-equalization
         """
-        tile = tuple([gridSize]) * 2
+        tile = tuple([gridSize]) * 2  # type : Tuple[int, int]
         normalizer = cv2.createCLAHE(clipLimit=clipLimit,
                                      tileGridSize=tile)
         self.data = normalizer.apply(self.data)
