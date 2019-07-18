@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Optional
 import cv2
 import numpy
+import PIL.Image
 from .image import Image
 
 
@@ -28,6 +29,13 @@ class GrayImage(Image):
         グレースケール画像へ変換
         """
         return self
+
+    def toPilImage(self) -> PIL.Image:
+        """
+        PIL.Image型へ変換
+        """
+        pilImage = PIL.Image.fromarray(self.data)
+        return pilImage
 
     def resize(self, scale: float) -> GrayImage:
         """

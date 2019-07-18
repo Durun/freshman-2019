@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List, Optional
 import cv2
+import PIL.Image
 from .image import Image
 from .gray_image import GrayImage
 
@@ -40,6 +41,15 @@ class ColorImage(Image):
         """
         grayImg = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
         return GrayImage(grayImg)
+
+    def toPilImage(self) -> PIL.Image:
+        """
+        PIL.Image型へ変換
+        """
+        buffer = self.data.copy()
+        buffer = cv2.cvtColor(buffer, cv2.COLOR_BGR2RGB)
+        pilImage = PIL.Image.fromarray(buffer)
+        return pilImage
 
     def warp(self, homography: Optional[List[float]]) -> ColorImage:
         height, width, _ = self.data.shape

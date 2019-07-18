@@ -4,6 +4,7 @@ import logging
 import cv2
 import numpy
 import copy
+import PIL.Image
 
 
 class Image(metaclass=ABCMeta):  # abstract class
@@ -32,6 +33,9 @@ class Image(metaclass=ABCMeta):  # abstract class
         """
         グレースケール画像へ変換
         """
+        raise NotImplementedError
+
+    def toPilImage(self) -> PIL.Image:
         raise NotImplementedError
 
     def isNChannelCorrect(self) -> bool:
