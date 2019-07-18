@@ -1,5 +1,7 @@
+from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from typing import List, Optional
+from typing import Tuple
 import logging
 import cv2
 import numpy
@@ -103,4 +105,42 @@ class Image(metaclass=ABCMeta):  # abstract class
                                    M=matrix,
                                    dsize=size,
                                    flags=cv2.INTER_CUBIC)
+        return self
+
+    def putText(self,
+                text: str,
+                position: Tuple[int, int],
+                color: Tuple[int, int, int] = (255, 255, 255)
+                ) -> Image:
+        """
+        テキストを描画
+        """
+        cv2.putText(self.data, text, position,
+                    fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=1,
+                    color=color,
+                    thickness=1, lineType=cv2.LINE_AA,
+                    bottomLeftOrigin=False)
+        return self
+
+    def putBox(self,
+               p1: Tuple[int, int], p2: Tuple[int, int],
+               color: Tuple[int, int, int] = (255, 255, 255)
+               ) -> Image:
+        """
+        長方形を描画
+        """
+        cv2.rectangle(self.data, p1, p2,
+                      color=color, thickness=1)
+        return self
+
+    def putTextBox(self,
+                   text: str,
+                   p1: Tuple[int, int], p2: Tuple[int, int],
+                   color: Tuple[int, int, int] = (255, 255, 255)
+                   ) -> Image:
+        """
+        長方形+テキストを描画
+        """
+        self.putBox(p1, p2, color)
+        self.putText(text, p1, color)
         return self
