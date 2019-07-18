@@ -63,8 +63,10 @@ class UrlImageReader(ImageReader):
 
     @staticmethod
     def __createEmptyFile(suffix="") -> IO[Any]:
+        dirPath = tempfile.gettempdir() + os.path.sep + "freshman2019-camera"
+        os.makedirs(dirPath, exist_ok=True)
         newFile = tempfile.NamedTemporaryFile(
-            mode="w+b", prefix="freshman2019-camera-", suffix=suffix)
+            mode="w+b", dir=dirPath, suffix=suffix)
         logging.info("Created tempfile : " + newFile.name)
         return newFile
 
