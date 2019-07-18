@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'opencv-python',
         'requests',
+        'pyocr',
     ],
     entry_points={
         'console_scripts': [
