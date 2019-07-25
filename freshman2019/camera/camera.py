@@ -27,3 +27,12 @@ class Camera(object):
         queryImg = self.queryReader.read()
         panelImg = self.trimmer.trim(queryImg)
         return panelImg
+
+    def getTemperetureImage(self) -> Image:
+        """
+        パネルの温度表示部分を切り出したImageを返す
+        """
+        panelImage = self.getPanelImage()
+        panelImage.trim(p1=(465, 240), p2=(525, 305))
+
+        return panelImage
