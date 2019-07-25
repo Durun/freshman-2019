@@ -47,5 +47,16 @@ class Panel(object):
 	#温度変更ボタンを押す
 	#--------------------------------------------
     def change_temperature(self, dtemp: int) -> None:
-    	#TODO:ソレノイド操作	
-        raise NotImplementedError()
+    	pushtimes = abs(dtemp)
+
+    	if(dtemp < 0):
+    		pin = PIN_TMP_DN
+    	else
+    		pin = PIN_TMP_UP
+
+    	for i in range(pushtimes):
+    		GPIO.output(pin,GPIO.HIGH)
+    		sleep(1)
+    		GPIO.output(pin,GPIO.LOW)
+    		sleep(0.5)
+
