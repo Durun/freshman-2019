@@ -109,6 +109,8 @@ class CameraImageReader(ImageReader):
     def __init__(self, deviceNumber: int):
         self.capture = cv2.VideoCapture(deviceNumber)
         self.capture.set(cv2.CAP_PROP_BUFFERSIZE, self.__class__.bufferSize)
+        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         logging.info("Initialized camera %d" % deviceNumber)
 
     def flush(self) -> None:
