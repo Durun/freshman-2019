@@ -144,3 +144,12 @@ class Image(metaclass=ABCMeta):  # abstract class
         self.putBox(p1, p2, color)
         self.putText(text, p1, color)
         return self
+
+    def trim(self, p1: Tuple[int, int], p2: Tuple[int, int]) -> Image:
+        """
+        矩形で切り取る
+        """
+        x1, y1 = p1
+        x2, y2 = p2
+        self.data = self.data[y1:y2, x1:x2]
+        return self
