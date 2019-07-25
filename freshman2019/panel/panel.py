@@ -27,7 +27,7 @@ class Panel(object):
     # --------------------------------------------
     # システム電源ボタンが押されたときの割り込み関数
     # --------------------------------------------
-    def SystemPowerButton(channel):
+    def SystemPowerButton(self, channel):
         pass
         # TODO:オートモードをオンまたはオフにする
         # TODO:本体LEDをつけたり消したりする
