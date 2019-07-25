@@ -6,6 +6,8 @@ setup(
     description='新人課題2019',
     packages=find_packages(),
     install_requires=[
+        'slackclient',
+        'rpi.gpio',
         'opencv-python',
         'requests',
         'pyocr',
