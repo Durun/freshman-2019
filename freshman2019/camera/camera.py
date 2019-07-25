@@ -42,7 +42,7 @@ class Camera(object):
             raise RecognitionError("got " + tempText)
 
         if not self.isValidTemperature(tempInt):
-            raise RecognitionError("got %d", tempInt)
+            raise RecognitionError("got %d" % tempInt)
 
         return tempInt
 
