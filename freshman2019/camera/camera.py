@@ -22,6 +22,17 @@ class Camera(object):
             tool=pyocr.tesseract, lang="letsgodigital")
 
     def get_temperature(self) -> int:
+        """
+        エアコンの設定温度を認識して返す
+
+        Returns
+        -------
+        temp : int
+
+        Throws
+        ------
+        RecognitionError
+        """
         tempImg = self.getTemperetureImage()
         tempText = self.recognizer.imageToText(tempImg)
         try:
@@ -37,6 +48,8 @@ class Camera(object):
 
     def is_power_on(self) -> bool:
         raise NotImplementedError
+
+    # 内部の処理
 
     def isValidTemperature(self, t: int) -> bool:
         """
