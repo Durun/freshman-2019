@@ -70,6 +70,8 @@ class Camera(object):
         パネルの温度表示部分を切り出したImageを返す
         """
         panelImage = self.getPanelImage()
-        panelImage.trim(p1=(465, 240), p2=(525, 305))
+        tempImage = panelImage.trim(p1=(470, 240), p2=(545, 330))
+        tempImage = tempImage.toGray().denoise()
+        tempImage = tempImage.normalize_clahe()  # TODO 他のnormalize方法を検討
 
-        return panelImage
+        return tempImage
