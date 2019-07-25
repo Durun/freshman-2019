@@ -7,6 +7,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'slackclient',
+        'rpi.gpio',
     ],
     entry_points={
         'console_scripts': [
