@@ -14,6 +14,17 @@ class Camera(object):
     recognizer: Recognizer
 
     def __init__(self, deviceNumber: int, trainImageUrl: str):
+        """
+        カメラの初期化
+
+        Parameters
+        ----------
+        deviceNumber: int
+            カメラのビデオデバイス番号
+            linuxなら `ls /dev/video*` でわかる
+        trainImageUrl: str
+            パネルを正面から撮った画像のURL
+        """
         self.queryReader = CameraImageReader(deviceNumber)
         self.trainReader = UrlImageReader(trainImageUrl)
         trainImg = self.trainReader.read()
