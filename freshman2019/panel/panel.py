@@ -37,8 +37,10 @@ class Panel(object):
 	#本体電源ボタンを押す
 	#--------------------------------------------
     def push_power_button(self) -> None:
-    	#TODO:ソレノイド操作		
-        raise NotImplementedError()
+    	GPIO.output(PIN_PWR,GPIO.HIGH)
+    	sleep(1)
+    	GPIO.output(PIN_PWR,GPIO.LOW)
+    	sleep(1)
 
 
 	#--------------------------------------------
