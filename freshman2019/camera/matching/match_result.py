@@ -80,7 +80,10 @@ class MatchResult(object):
             受容されるパーセンタイルの上限
         """
         distances = self.getDistances()
-        upperBound = numpy.percentile(distances, upperBoundPercent)
+        if 0 < len(distances):
+            upperBound = numpy.percentile(distances, upperBoundPercent)
+        else:
+            upperBound = 0
         return self.distanceFilter(upperBound)
 
     def sort(self) -> MatchResult:
