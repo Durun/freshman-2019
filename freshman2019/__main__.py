@@ -16,6 +16,7 @@ def main():
         camera=camera,
         panel=panel,
         slack_token=os.environ['SLACK_BOT_TOKEN'],
+        post_channel=os.environ['SLACK_BOT_POST_CHANNEL']
     )
 
     bot.start()

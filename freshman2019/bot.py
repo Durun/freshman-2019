@@ -19,6 +19,7 @@ USAGE_TEXT = """
 class Bot(object):
     camera: Camera
     panel: Panel
+    post_channel: str
     rtm: slack.RTMClient
     api: slack.WebClient
 
@@ -28,9 +29,10 @@ class Bot(object):
 
     __stop_periodic: bool
 
-    def __init__(self, camera: Camera, panel: Panel, slack_token: str):
+    def __init__(self, camera: Camera, panel: Panel, slack_token: str, post_channel: str):
         self.camera = camera
         self.panel = panel
+        self.post_channel = post_channel
         self.rtm = slack.RTMClient(token=slack_token, run_async=True)
         self.api = slack.WebClient(token=slack_token, run_async=True)
 
@@ -63,6 +65,12 @@ class Bot(object):
     def stop(self):
         self.__stop_periodic = True
         self.rtm.stop()
+
+    async def reply(self, message: str):
+        await self.api.chat_postMessage(
+            channel=self.post_channel,
+            text=message,
+        )
 
     async def periodic(self):
         while True and not self.__stop_periodic:
