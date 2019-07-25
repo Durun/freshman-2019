@@ -8,6 +8,9 @@ setup(
     install_requires=[
         'slackclient',
         'rpi.gpio',
+        'opencv-python',
+        'requests',
+        'pyocr',
     ],
     entry_points={
         'console_scripts': [
