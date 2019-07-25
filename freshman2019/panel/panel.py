@@ -15,7 +15,6 @@ class Panel(object):
         # ピンに対する入出力の設定
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(PIN_LED, GPIO.OUT)
-        GPIO.setup(PIN_BTN, GPIO.IN)
         GPIO.setup(PIN_PWR, GPIO.OUT)
         GPIO.setup(PIN_TMP_UP, GPIO.OUT)
         GPIO.setup(PIN_TMP_DN, GPIO.OUT)
