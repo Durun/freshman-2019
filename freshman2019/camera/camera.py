@@ -29,10 +29,20 @@ class Camera(object):
         except ValueError:
             logging.warn("got " + tempText)
             raise RecognitionError("got " + tempText)
+
+        if not self.isValidTemperature(tempInt):
+            raise RecognitionError("got %d", tempInt)
+
         return tempInt
 
     def is_power_on(self) -> bool:
         raise NotImplementedError
+
+    def isValidTemperature(self, t: int) -> bool:
+        """
+        整数が、エアコンの温度として妥当か?
+        """
+        return (10 < t) and (t < 40)
 
     def getPanelImage(self) -> Image:
         """
