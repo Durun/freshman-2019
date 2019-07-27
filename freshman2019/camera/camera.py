@@ -33,9 +33,16 @@ class Camera(object):
         self.recognizer = Recognizer(
             tool=pyocr.tesseract, lang="letsgodigital")
 
-    def get_temperature(self) -> int:
+    def get_temperature(self, timeout: int = 50, sampleSize: int = 5) -> int:
         """
         エアコンの設定温度を認識して返す
+
+        Parameters
+        ----------
+        timeout : int
+            認識の試行回数
+        sampleSize : int
+            認識をsampleSize回試して、最頻値を結果とする
 
         Returns
         -------
@@ -45,20 +52,49 @@ class Camera(object):
         ------
         RecognitionError
         """
-        tempImg = self.getTemperetureImage()
-        tempImg.show("temp")  # debug
-        tempBoxes = self.recognizer.imageToLineBoxes(tempImg)
+        from statistics import median
+        tryCount = 0
+        samples = []
+        for i in range(timeout):
+            tryCount = i+1
+            try:
+                samples.append(self.getTemperatureOnce())
+            except RecognitionError:
+                pass
+            if len(samples) >= sampleSize:
+                break
+        logging.info("tried %d times -> got %s" % (tryCount, str(samples)))
 
-        temps = self.lineBoxestoTempList(tempBoxes)
-
-        if len(temps) == 0:
+        if len(samples) == 0:
             raise RecognitionError
-        return temps.pop()
+
+        result = median(samples)
+        return int(result)
 
     def is_power_on(self) -> bool:
         raise NotImplementedError
 
     # 内部の処理
+
+    def getTemperatureOnce(self) -> int:
+        """
+        エアコンの設定温度を1回認識して返す
+
+        Returns
+        -------
+        temp : int
+
+        Throws
+        ------
+        RecognitionError
+        """
+        tempImg = self.getTemperetureImage()  # type : Image
+        tempBoxes = self.recognizer.imageToLineBoxes(tempImg)
+        temps = self.lineBoxestoTempList(tempBoxes)  # type : List[str]
+        tempImg.show("temp")  # debug
+        if len(temps) == 0:
+            raise RecognitionError
+        return temps.pop()
 
     def getPanelImage(self) -> Image:
         """
