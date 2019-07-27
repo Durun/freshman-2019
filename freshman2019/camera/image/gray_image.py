@@ -146,3 +146,17 @@ class GrayImage(Image):
         """
         self.data = cv2.fastNlMeansDenoising(self.data, None, 10, 7, 21)
         return self
+
+    def mask(self, mask: GrayImage) -> GrayImage:
+        """
+        マスクする
+        """
+        self.data = cv2.bitwise_and(self.data, self.data, mask=mask.data)
+        return self
+
+    def bitwise_not(self) -> GrayImage:
+        """
+        反転
+        """
+        self.data = cv2.bitwise_not(self.data)
+        return self
