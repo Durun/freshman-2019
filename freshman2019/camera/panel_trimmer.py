@@ -22,7 +22,7 @@ class PanelTrimmer(object):
 
     def trim(self, queryImage: Image) -> Image:
         query = queryImage.copy().toGray()
-        query = query.normalize_clahe()
+        # query = query.normalize_clahe()
         # match
         matchResult = self.__getMatchResult(query)
 
@@ -32,7 +32,8 @@ class PanelTrimmer(object):
 
         # warp
         h = matchResult.findHomography()
-        h = self.stabler.stableSuppressing(h)
+        if not h is None:
+            h = self.stabler.stableSuppressing(h)
         resultImage = queryImage.copy().warp(h)
         return resultImage
 
