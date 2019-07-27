@@ -91,7 +91,6 @@ class Camera(object):
         tempImg = self.getTemperetureImage()  # type : Image
         tempBoxes = self.recognizer.imageToLineBoxes(tempImg)
         temps = self.lineBoxestoTempList(tempBoxes)  # type : List[str]
-        tempImg.show("temp")  # debug
         if len(temps) == 0:
             raise RecognitionError
         return temps.pop()
@@ -111,11 +110,9 @@ class Camera(object):
         import cv2
         panelImage = self.getPanelImage()
         tempImage = panelImage.trim(p1=(400, 150), p2=(600, 350))  # TODO
-        tempImage.show("t")
         # mask
         binImage = self.binarizePanel(tempImage.toGray())
         maskImage = self.createMask(binImage)
-        maskImage.show("mask")
         tempImage = binImage.bitwise_not().mask(maskImage)
         tempImage.morph_close(3)
         return tempImage
