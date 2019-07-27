@@ -98,6 +98,20 @@ class GrayImage(Image):
     def morph_close(self, kernelSize: int) -> GrayImage:
         return self.morphology(cv2.MORPH_CLOSE, kernelSize)
 
+    def morph2(self, method: int) -> GrayImage:
+        kernel = numpy.array([[0, 1, 0],
+                              [1, 1, 1],
+                              [0, 1, 0]], dtype=numpy.uint8)
+        self.data = cv2.morphologyEx(
+            src=self.data,
+            op=method,
+            kernel=kernel
+        )
+        return self
+
+    def morph_close2(self) -> GrayImage:
+        return self.morph2(cv2.MORPH_CLOSE)
+
     def blur_median(self, kernelSize: int) -> GrayImage:
         """
         中央値フィルタ
