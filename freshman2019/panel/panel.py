@@ -30,7 +30,17 @@ class Panel(object):
 	def SystemPowerButton(self,channel):
 		#TODO:オートモードをオンまたはオフにする
 		#TODO:本体LEDをつけたり消したりする	
+		#modeLED()
 
+
+	#--------------------------------------------
+	#基板上LEDをつけたり消したりする関数
+	#--------------------------------------------
+	def modeLED(self,state):
+		if #state == true:
+			GPIO.output(PIN_LED,GPIO.HIGH)
+		else:
+			GPIO.output(PIN_LED,GPIO.LOW)
 
 	#--------------------------------------------
 	#本体電源ボタンを押す
