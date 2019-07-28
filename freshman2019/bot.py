@@ -83,7 +83,26 @@ class Bot(object):
         while True and not self.__stop_periodic:
             await asyncio.sleep(1)
             if self.mode == Mode.AUTO:
+                # TODO オートモードの電源・温度チェックのタイミングを設定
                 pass
+
+    async def auto_power_check(self):
+        try:
+            if not self.camera.is_power_on():
+                # 電源ボタンを押す
+                self.panel.push_power_button()
+
+                # 成功しているかどうか確認
+                if self.camera.is_power_on():
+                    # 成功
+                    temp = self.camera.get_temperature()
+                    await self.reply("エアコンの電源を自動的につけ直しました。設定温度は{}度です。".format(temp))
+                else:
+                    # 失敗
+                    # TODO リトライ
+                    await self.reply("エアコンボタンの操作に失敗しました。")
+        except RecognitionError:
+            await self.reply("カメラ画像認識に失敗しました。")
 
     async def __on_message_received(self, **payload):
         data = payload['data']
@@ -258,8 +277,6 @@ class Bot(object):
                 # 失敗
                 # TODO リトライ
                 await reply("温度設定に失敗しました。")
-        except RecognitionError:
-            await reply("カメラ画像認識に失敗しました。")
 
     async def usage(self, *args, reply: ReplyType) -> None:
         """
