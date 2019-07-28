@@ -13,6 +13,13 @@ MIN_TEMP = 18
 
 USAGE_TEXT = """
 使い方
+`state` エアコンの状態の確認
+`on`, `off` エアコンのオンオフ
+`mode` 動作モード確認
+`auto`, `manual` 動作モード切り替え
+`temp +X/-X` 設定温度をX度上げる/下げる
+`temp XX` 設定温度をXX度にする
+`help`, `usage` 使い方を表示
 """.strip()
 
 
