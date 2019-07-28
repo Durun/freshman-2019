@@ -14,7 +14,6 @@ class Panel(object):
 		#ピンに対する入出力の設定	
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(PIN_LED,GPIO.OUT)
-		GPIO.setup(PIN_BTN,GPIO.IN)
 		GPIO.setup(PIN_PWR,GPIO.OUT)
 		GPIO.setup(PIN_TMP_UP,GPIO.OUT)
 		GPIO.setup(PIN_TMP_DN,GPIO.OUT)
@@ -28,7 +27,7 @@ class Panel(object):
 	#--------------------------------------------
 	#システム電源ボタンが押されたときの割り込み関数
 	#--------------------------------------------
-	def SystemPowerButton(channel):
+	def SystemPowerButton(self,channel):
 		#TODO:オートモードをオンまたはオフにする
 		#TODO:本体LEDをつけたり消したりする	
 
