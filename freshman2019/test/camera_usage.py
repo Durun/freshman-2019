@@ -19,4 +19,4 @@ try:
     temp = camera.get_temperature()
     print("Success! Temp= %d" % temp)
 except RecognitionError as err:
-    print(err)
+    print("Failed.")

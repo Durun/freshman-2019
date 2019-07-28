@@ -137,11 +137,20 @@ class Camera(object):
 
         maskImg = image.copy()
         maskImg.data.fill(0)
-        contours, hierarchy = cv2.findContours(
-            image.data, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        result = cv2.findContours(
+            image=image.data,
+            mode=cv2.RETR_TREE,
+            method=cv2.CHAIN_APPROX_SIMPLE)
+        # result : OpenCV3系では(image, contours, hierarchy), OpenCV4系では(contours, hierarchy)
+        if len(result) == 2:
+            contours, _ = result
+        else:
+            _, contours, _ = result
+
         for cnt in contours:
             # 輪郭に外接する長方形を取得する。
-            x, y, width, height = cv2.boundingRect(cnt)
+            x, y, width, height = cv2.boundingRect(
+                cnt)
             # 面積を計算
             s = width * height
             # 縦横比を計算
