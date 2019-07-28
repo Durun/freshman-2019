@@ -3,7 +3,7 @@ import signal
 import asyncio
 from typing import Callable
 from .panel import Panel
-from .camera import Camera
+from .camera import Camera, RecognitionError
 from .mode import Mode
 
 ReplyType = Callable[[str], None]
@@ -114,13 +114,16 @@ class Bot(object):
         """
 
         # 現在の電源状態確認
-        is_power_on = self.camera.is_power_on()
-        if is_power_on:
-            # 現在の設定温度確認
-            temp = self.camera.get_temperature()
-            await reply("現在エアコンはオンで、設定温度は{}度です。".format(temp))
-        else:
-            await reply("現在エアコンはオフです。")
+        try:
+            is_power_on = self.camera.is_power_on()
+            if is_power_on:
+                # 現在の設定温度確認
+                temp = self.camera.get_temperature()
+                await reply("現在エアコンはオンで、設定温度は{}度です。".format(temp))
+            else:
+                await reply("現在エアコンはオフです。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def switch(self, on: bool, reply: ReplyType) -> None:
         """
@@ -128,30 +131,33 @@ class Bot(object):
         """
 
         # 現在の電源状態確認
-        current_power = self.camera.is_power_on()
-        if current_power != on:
-            # 電源ボタンを押す
-            self.panel.push_power_button()
-
-            # 成功しているかどうか確認
+        try:
             current_power = self.camera.is_power_on()
-            if current_power == on:
-                # 成功
-                if on:
-                    temp = self.camera.get_temperature()
-                    await reply("エアコンの電源をつけました。設定温度は{}度です。".format(temp))
+            if current_power != on:
+                # 電源ボタンを押す
+                self.panel.push_power_button()
+
+                # 成功しているかどうか確認
+                current_power = self.camera.is_power_on()
+                if current_power == on:
+                    # 成功
+                    if on:
+                        temp = self.camera.get_temperature()
+                        await reply("エアコンの電源をつけました。設定温度は{}度です。".format(temp))
+                    else:
+                        await reply("エアコンの電源を切りました。")
                 else:
-                    await reply("エアコンの電源を切りました。")
+                    # 失敗
+                    # TODO リトライ
+                    await reply("エアコンボタンの操作に失敗しました。")
             else:
-                # 失敗
-                # TODO リトライ
-                await reply("エアコンボタンの操作に失敗しました。")
-        else:
-            # 既に指定の電源状態になってる
-            if on:
-                await reply("既にエアコンの電源はついています。")
-            else:
-                await reply("既にエアコンの電源は切れています。")
+                # 既に指定の電源状態になってる
+                if on:
+                    await reply("既にエアコンの電源はついています。")
+                else:
+                    await reply("既にエアコンの電源は切れています。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def mode(self, *args, reply: ReplyType) -> None:
         """
@@ -159,48 +165,57 @@ class Bot(object):
         """
 
         # 現在の電源状態確認
-        is_power_on = self.camera.is_power_on()
-        if is_power_on:
-            if self.mode == Mode.AUTO:
-                await reply("現在、エアコンはオートモードで稼働しています。")
+        try:
+            is_power_on = self.camera.is_power_on()
+            if is_power_on:
+                if self.mode == Mode.AUTO:
+                    await reply("現在、エアコンはオートモードで稼働しています。")
+                else:
+                    await reply("現在、エアコンはマニュアルモードで稼働しています。")
             else:
-                await reply("現在、エアコンはマニュアルモードで稼働しています。")
-        else:
-            await reply("現在エアコンは稼働していません。")
+                await reply("現在エアコンは稼働していません。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def auto(self, *args, reply: ReplyType) -> None:
         """
         オートモードコマンド
         """
 
-        # 現在の電源状態確認
-        is_power_on = self.camera.is_power_on()
-        if is_power_on:
-            if self.mode == Mode.AUTO:
-                await reply("現在、エアコンはオートモードで稼働しています。")
+        try:
+            # 現在の電源状態確認
+            is_power_on = self.camera.is_power_on()
+            if is_power_on:
+                if self.mode == Mode.AUTO:
+                    await reply("現在、エアコンはオートモードで稼働しています。")
+                else:
+                    # モード変更
+                    self.mode = Mode.AUTO
+                    await reply("オートモードに変更しました。")
             else:
-                # モード変更
-                self.mode = Mode.AUTO
-                await reply("オートモードに変更しました。")
-        else:
-            await reply("現在エアコンは稼働していません。")
+                await reply("現在エアコンは稼働していません。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def manual(self, *args, reply: ReplyType) -> None:
         """
         マニュアルモードコマンド
         """
 
-        # 現在の電源状態確認
-        is_power_on = self.camera.is_power_on()
-        if is_power_on:
-            if self.mode == Mode.AUTO:
-                # モード変更
-                self.mode = Mode.MANUAL
-                await reply("マニュアルモードに変更しました。")
+        try:
+            # 現在の電源状態確認
+            is_power_on = self.camera.is_power_on()
+            if is_power_on:
+                if self.mode == Mode.AUTO:
+                    # モード変更
+                    self.mode = Mode.MANUAL
+                    await reply("マニュアルモードに変更しました。")
+                else:
+                    await reply("現在、エアコンはマニュアルモードで稼働しています。")
             else:
-                await reply("現在、エアコンはマニュアルモードで稼働しています。")
-        else:
-            await reply("現在エアコンは稼働していません。")
+                await reply("現在エアコンは稼働していません。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def temp(self, *args, reply: ReplyType) -> None:
         """
@@ -211,37 +226,40 @@ class Bot(object):
             await reply("コマンドの引数の数が不正です。")
             return
 
-        # 現在の設定温度確認
-        current_temp = self.camera.get_temperature()
-        delta = 0
-
         try:
-            # 差分を計算
-            t: str = args[0]
-            if t.startswith("+"):
-                delta = min(int(t.lstrip("+")) + current_temp, MAX_TEMP) - current_temp
-            elif t.startswith("-"):
-                delta = max(current_temp - int(t.lstrip("-")), MIN_TEMP) - current_temp
+            # 現在の設定温度確認
+            current_temp = self.camera.get_temperature()
+            delta = 0
+
+            try:
+                # 差分を計算
+                t: str = args[0]
+                if t.startswith("+"):
+                    delta = min(int(t.lstrip("+")) + current_temp, MAX_TEMP) - current_temp
+                elif t.startswith("-"):
+                    delta = max(current_temp - int(t.lstrip("-")), MIN_TEMP) - current_temp
+                else:
+                    delta = max(min(int(t), MAX_TEMP), MIN_TEMP) - current_temp
+            except ValueError:
+                await reply("コマンドの引数が不正です。")
+                return
+
+            target_temp = current_temp + delta
+
+            # 温度ボタンを押す
+            self.panel.change_temperature(delta)
+
+            # 温度設定確認
+            current_temp = self.camera.get_temperature()
+            if current_temp == target_temp:
+                # 成功
+                await reply("設定温度を{}度にしました。".format(target_temp))
             else:
-                delta = max(min(int(t), MAX_TEMP), MIN_TEMP) - current_temp
-        except ValueError:
-            await reply("コマンドの引数が不正です。")
-            return
-
-        target_temp = current_temp + delta
-
-        # 温度ボタンを押す
-        self.panel.change_temperature(delta)
-
-        # 温度設定確認
-        current_temp = self.camera.get_temperature()
-        if current_temp == target_temp:
-            # 成功
-            await reply("設定温度を{}度にしました。".format(target_temp))
-        else:
-            # 失敗
-            # TODO リトライ
-            await reply("温度設定に失敗しました。")
+                # 失敗
+                # TODO リトライ
+                await reply("温度設定に失敗しました。")
+        except RecognitionError:
+            await reply("カメラ画像認識に失敗しました。")
 
     async def usage(self, *args, reply: ReplyType) -> None:
         """
