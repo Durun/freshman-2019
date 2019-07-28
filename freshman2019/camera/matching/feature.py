@@ -24,11 +24,11 @@ class Feature(object):
         self.kp = kp
         self.des = des
 
-    def match(self, that: Feature, matcherAlgorithm: cv2.DescriptorMatcher) -> List[cv2.DMatch]:
+    def match(self, that: Feature, matcherAlgorithm: cv2.DescriptorMatcher):
         matches = matcherAlgorithm.match(self.des, that.des)
         return matches
 
-    def plot(self) -> Image:
+    def plot(self):
         newImg = copy.copy(self.img)
         if newImg.nChannel() == 1:
             newImg.data = cv2.cvtColor(newImg.data, cv2.COLOR_GRAY2BGR)

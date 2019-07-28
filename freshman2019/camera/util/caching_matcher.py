@@ -8,7 +8,7 @@ class CachingMatcher(object):
         self.matcher = matcher
         self.trainFeature = matcher.detect(trainImage)
 
-    def matchImage(self, queryImage: GrayImage) -> MatchResult:
+    def matchImage(self, queryImage: GrayImage):
         queryFeature = self.matcher.detect(queryImage)
         result = self.matcher.match(queryFeature, self.trainFeature)
         return result

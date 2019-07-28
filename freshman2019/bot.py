@@ -93,7 +93,7 @@ class Bot(object):
                 await reply("無効な命令です: {}".format(splited[0]))
                 await self.usage(*splited[1:], reply=reply)
 
-    async def state(self, *args, reply: ReplyType) -> None:
+    async def state(self, *args, reply: ReplyType):
         """
         エアコン状態確認コマンド
         """
@@ -107,7 +107,7 @@ class Bot(object):
         else:
             await reply("現在エアコンはオフです。")
 
-    async def switch(self, on: bool, reply: ReplyType) -> None:
+    async def switch(self, on: bool, reply: ReplyType):
         """
         エアコン電源操作コマンド
         """
@@ -138,7 +138,7 @@ class Bot(object):
             else:
                 await reply("既にエアコンの電源は切れています。")
 
-    async def mode(self, *args, reply: ReplyType) -> None:
+    async def mode(self, *args, reply: ReplyType):
         """
         モード確認コマンド
         """
@@ -153,7 +153,7 @@ class Bot(object):
         else:
             await reply("現在エアコンは稼働していません。")
 
-    async def auto(self, *args, reply: ReplyType) -> None:
+    async def auto(self, *args, reply: ReplyType):
         """
         オートモードコマンド
         """
@@ -170,7 +170,7 @@ class Bot(object):
         else:
             await reply("現在エアコンは稼働していません。")
 
-    async def manual(self, *args, reply: ReplyType) -> None:
+    async def manual(self, *args, reply: ReplyType):
         """
         マニュアルモードコマンド
         """
@@ -187,7 +187,7 @@ class Bot(object):
         else:
             await reply("現在エアコンは稼働していません。")
 
-    async def temp(self, *args, reply: ReplyType) -> None:
+    async def temp(self, *args, reply: ReplyType):
         """
         温度設定コマンド
         """
@@ -228,7 +228,7 @@ class Bot(object):
             # TODO リトライ
             await reply("温度設定に失敗しました。")
 
-    async def usage(self, *args, reply: ReplyType) -> None:
+    async def usage(self, *args, reply: ReplyType):
         """
         使い方コマンド
         """

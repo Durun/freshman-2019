@@ -15,29 +15,29 @@ class GrayImage(Image):
     Image
     """
 
-    def isNChannelCorrect(self) -> bool:
+    def isNChannelCorrect(self):
         return self.nChannel() == 1
 
-    def copy(self) -> GrayImage:
+    def copy(self):
         """
         自身の複製を返す
         """
         return super()._copy()
 
-    def toGray(self) -> GrayImage:
+    def toGray(self):
         """
         グレースケール画像へ変換
         """
         return self
 
-    def toPilImage(self) -> PIL.Image:
+    def toPilImage(self):
         """
         PIL.Image型へ変換
         """
         pilImage = PIL.Image.fromarray(self.data)
         return pilImage
 
-    def resize(self, scale: float) -> GrayImage:
+    def resize(self, scale: float):
         """
         拡大・縮小
 
@@ -48,14 +48,14 @@ class GrayImage(Image):
         """
         return super().resize(scale)
 
-    def warp(self, homography: Optional[List[float]]) -> GrayImage:
+    def warp(self, homography: Optional[List[float]]):
         height, width = self.data.shape
         return self._warp(homography, width=width, height=height)
 
-    def rotate(self, degree: float) -> GrayImage:
+    def rotate(self, degree: float):
         return self._rotate(degree)
 
-    def binarize(self) -> GrayImage:
+    def binarize(self):
         """
         ２値化
         """
@@ -69,7 +69,7 @@ class GrayImage(Image):
         )
         return self
 
-    def morphology(self, method: int, kernelSize: int) -> GrayImage:
+    def morphology(self, method: int, kernelSize: int):
         """
         モルフォロジー変換
         see also
@@ -86,19 +86,19 @@ class GrayImage(Image):
         )
         return self
 
-    def morph_erode(self, kernelSize: int) -> GrayImage:
+    def morph_erode(self, kernelSize: int):
         return self.morphology(cv2.MORPH_ERODE, kernelSize)
 
-    def morph_dilate(self, kernelSize: int) -> GrayImage:
+    def morph_dilate(self, kernelSize: int):
         return self.morphology(cv2.MORPH_DILATE, kernelSize)
 
-    def morph_open(self, kernelSize: int) -> GrayImage:
+    def morph_open(self, kernelSize: int):
         return self.morphology(cv2.MORPH_OPEN, kernelSize)
 
-    def morph_close(self, kernelSize: int) -> GrayImage:
+    def morph_close(self, kernelSize: int):
         return self.morphology(cv2.MORPH_CLOSE, kernelSize)
 
-    def morph2(self, method: int) -> GrayImage:
+    def morph2(self, method: int):
         kernel = numpy.array([[0, 1, 0],
                               [1, 1, 1],
                               [0, 1, 0]], dtype=numpy.uint8)
@@ -109,10 +109,10 @@ class GrayImage(Image):
         )
         return self
 
-    def morph_close2(self) -> GrayImage:
+    def morph_close2(self):
         return self.morph2(cv2.MORPH_CLOSE)
 
-    def blur_median(self, kernelSize: int) -> GrayImage:
+    def blur_median(self, kernelSize: int):
         """
         中央値フィルタ
         kernelSizeは奇数とすること.
@@ -127,7 +127,7 @@ class GrayImage(Image):
         self.data = cv2.medianBlur(self.data, kernelSize)
         return self
 
-    def normalize_clahe(self, clipLimit: float = 2.0, gridSize: int = 8) -> GrayImage:
+    def normalize_clahe(self, clipLimit: float = 2.0, gridSize: int = 8):
         """
         ヒストグラム平均化(CLAHE法)
         see also
@@ -140,21 +140,21 @@ class GrayImage(Image):
         self.data = normalizer.apply(self.data)
         return self
 
-    def denoise(self) -> GrayImage:
+    def denoise(self):
         """
         ノイズ除去
         """
         self.data = cv2.fastNlMeansDenoising(self.data, None, 10, 7, 21)
         return self
 
-    def mask(self, mask: GrayImage) -> GrayImage:
+    def mask(self, mask: GrayImage):
         """
         マスクする
         """
         self.data = cv2.bitwise_and(self.data, self.data, mask=mask.data)
         return self
 
-    def bitwise_not(self) -> GrayImage:
+    def bitwise_not(self):
         """
         反転
         """

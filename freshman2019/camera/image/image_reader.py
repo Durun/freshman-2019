@@ -24,7 +24,7 @@ class ImageReader(metaclass=ABCMeta):  # abstract class
     CameraImageReader
     """
 
-    def read(self) -> ColorImage:
+    def read(self):
         raise NotImplementedError
 
 
@@ -37,7 +37,7 @@ class FileImageReader(ImageReader):
         assert os.path.isfile(filePath), "ファイル "+filePath+" は存在しません"
         self.filePath = filePath
 
-    def read(self) -> ColorImage:
+    def read(self):
         data = cv2.imread(self.filePath)
         logging.info("read %s" % self.filePath)
         return ColorImage(data)
@@ -59,7 +59,7 @@ class UrlImageReader(ImageReader):
         self.file = self.__createEmptyFile()
 
     @staticmethod
-    def __createEmptyFile(suffix="") -> IO[Any]:
+    def __createEmptyFile(suffix=""):
         dirPath = tempfile.gettempdir() + os.path.sep + "freshman2019-camera"
         os.makedirs(dirPath, exist_ok=True)
         newFile = tempfile.NamedTemporaryFile(
@@ -68,12 +68,12 @@ class UrlImageReader(ImageReader):
         return newFile
 
     @staticmethod
-    def __getSuffix(response: requests.Response) -> str:
+    def __getSuffix(response: requests.Response):
         urlPath = response.request.path_url
         _, suffix = os.path.splitext(urlPath)
         return suffix
 
-    def __updateFile(self) -> None:
+    def __updateFile(self):
         try:
             response = requests.get(self.url)
         except ConnectionError as err:
@@ -86,10 +86,10 @@ class UrlImageReader(ImageReader):
         self.file = newFile  # update
         return
 
-    def __getFileReader(self) -> FileImageReader:
+    def __getFileReader(self):
         return FileImageReader(self.file.name)
 
-    def read(self) -> ColorImage:
+    def read(self):
         self.__updateFile()
         reader = self.__getFileReader()
         return reader.read()
@@ -109,13 +109,13 @@ class CameraImageReader(ImageReader):
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         logging.info("Initialized camera %d" % deviceNumber)
 
-    def flush(self) -> None:
+    def flush(self):
         n = self.__class__.bufferSize
         for i in range(n):
             self.capture.read()
         return
 
-    def read(self) -> ColorImage:
+    def read(self):
         self.flush()
         ret, frame = self.capture.read()
         if ret == False:

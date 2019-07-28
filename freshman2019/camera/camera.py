@@ -29,7 +29,7 @@ class Camera(object):
         self.recognizer = Recognizer(
             tool=pyocr.tesseract, lang="letsgodigital")
 
-    def get_temperature(self, timeout: int = 50, sampleSize: int = 5) -> int:
+    def get_temperature(self, timeout: int = 50, sampleSize: int = 5):
         """
         エアコンの設定温度を認識して返す
 
@@ -67,12 +67,12 @@ class Camera(object):
         result = median(samples)
         return int(result)
 
-    def is_power_on(self) -> bool:
+    def is_power_on(self):
         raise NotImplementedError
 
     # 内部の処理
 
-    def getTemperatureOnce(self) -> int:
+    def getTemperatureOnce(self):
         """
         エアコンの設定温度を1回認識して返す
 
@@ -91,7 +91,7 @@ class Camera(object):
             raise RecognitionError
         return temps.pop()
 
-    def getPanelImage(self) -> Image:
+    def getPanelImage(self):
         """
         パネル部分全体を切り出したImageを返す
         """
@@ -99,7 +99,7 @@ class Camera(object):
         panelImg = self.trimmer.trim(queryImg)
         return panelImg
 
-    def getTemperetureImage(self) -> Image:
+    def getTemperetureImage(self):
         """
         パネルの温度表示部分を切り出したImageを返す
         """
@@ -113,7 +113,7 @@ class Camera(object):
         tempImage.morph_close(3)
         return tempImage
 
-    def binarizePanel(self, image: GrayImage) -> GrayImage:
+    def binarizePanel(self, image: GrayImage):
         """
         パネル画像を2値化
         """
@@ -123,7 +123,7 @@ class Camera(object):
         image = image.morph_close(2)
         return image
 
-    def createMask(self, binImage: GrayImage) -> GrayImage:
+    def createMask(self, binImage: GrayImage):
         """
         数字部分だけを抜き出すためのマスクを作成
         """
@@ -153,7 +153,7 @@ class Camera(object):
                               (255, 255, 255), -1, cv2.LINE_AA)
         return maskImg
 
-    def lineBoxestoTempList(self, boxes: List[pyocr.builders.LineBox]) -> List[int]:
+    def lineBoxestoTempList(self, boxes: List[pyocr.builders.LineBox]):
         """
         温度として妥当な文字列のみを返す
         """
@@ -172,7 +172,7 @@ class Camera(object):
                 pass
 
         # 外れ値を除去
-        def isValidTemperature(t: int) -> bool:
+        def isValidTemperature(t: int):
             return (10 < t) and (t < 30)
         validTemps = filter(lambda t: isValidTemperature(t), temps)
         return list(validTemps)

@@ -42,7 +42,7 @@ class Recognizer(object):
             raise OcrNotAvailableError(tool + "is NOT available.")
         return tool
 
-    def __getLangChecking(self, lang: str) -> str:
+    def __getLangChecking(self, lang: str):
         """
         toolでlangが使用可能ならそのまま返し, 使用不可なら例外を投げる.
 
@@ -79,7 +79,7 @@ class Recognizer(object):
         )
         return result
 
-    def imageToText(self, image: Image) -> str:
+    def imageToText(self, image: Image):
         """
         imageを認識し結果をstrで返す
         """
@@ -87,7 +87,7 @@ class Recognizer(object):
         result = self.__recognize(image, builder)
         return result
 
-    def imageToBoxes(self, image: Image) -> List[pyocr.builders.Box]:
+    def imageToBoxes(self, image: Image):
         """
         imageを認識し結果をpyocr.builders.Boxで返す
 
@@ -105,7 +105,7 @@ class Recognizer(object):
         result = self.__recognize(image, builder)
         return result
 
-    def imageToLineBoxes(self, image: Image) -> pyocr.builders.LineBox:
+    def imageToLineBoxes(self, image: Image):
         """
         imageを認識し結果をpyocr.builders.LineBoxで返す
         """

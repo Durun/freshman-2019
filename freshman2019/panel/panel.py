@@ -35,7 +35,7 @@ class Panel(object):
     # --------------------------------------------
     # 本体電源ボタンを押す
     # --------------------------------------------
-    def push_power_button(self) -> None:
+    def push_power_button(self):
         GPIO.output(PIN_PWR, GPIO.HIGH)
         sleep(1)
         GPIO.output(PIN_PWR, GPIO.LOW)
@@ -44,7 +44,7 @@ class Panel(object):
     # --------------------------------------------
     # 温度変更ボタンを押す
     # --------------------------------------------
-    def change_temperature(self, dtemp: int) -> None:
+    def change_temperature(self, dtemp: int):
         pushtimes = abs(dtemp)
 
         if dtemp < 0:

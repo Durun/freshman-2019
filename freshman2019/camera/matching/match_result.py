@@ -18,7 +18,7 @@ class MatchResult(object):
         self.feature2 = feature2
         self.matches = matches
 
-    def copy(self) -> MatchResult:
+    def copy(self):
         """
         自身のコピーを返す
         feature1, feature2は変化しないと仮定.
@@ -28,7 +28,7 @@ class MatchResult(object):
         new.matches = copy.copy(self.matches)
         return new
 
-    def plot(self) -> Image:
+    def plot(self):
         img1 = self.feature1.img
         kp1 = self.feature1.kp
         img2 = self.feature2.img
@@ -42,7 +42,7 @@ class MatchResult(object):
                                       None, flags=2)
         return newImg
 
-    def filter(self, predicate: Callable[[cv2.DMatch], bool]) -> MatchResult:
+    def filter(self, predicate: Callable[[cv2.DMatch], bool]):
         """
         マッチ結果をフィルタする
         Parameters
@@ -55,7 +55,7 @@ class MatchResult(object):
         new.matches = list(filter(predicate, new.matches))
         return new
 
-    def distanceFilter(self, upperBound: float) -> MatchResult:
+    def distanceFilter(self, upperBound: float):
         """
         マッチ結果をdistance(特徴空間上の距離)でフィルタする
         Parameters
@@ -63,10 +63,10 @@ class MatchResult(object):
         upperBound: float
             受容されるdistanceの上限
         """
-        def pred(match: cv2.DMatch) -> bool: return (match.distance <= upperBound)
+        def pred(match: cv2.DMatch): return (match.distance <= upperBound)
         return self.filter(pred)
 
-    def percentileFilter(self, upperBoundPercent: int) -> MatchResult:
+    def percentileFilter(self, upperBoundPercent: int):
         """
         マッチ結果をdistance(特徴空間上の距離)の分布をもとに、
         パーセンタイルでフィルタする
@@ -82,18 +82,18 @@ class MatchResult(object):
             upperBound = 0
         return self.distanceFilter(upperBound)
 
-    def sort(self) -> MatchResult:
+    def sort(self):
         new = self.copy()
         new.matches = sorted(new.matches, key=lambda x: x.distance)
         return new
 
-    def first(self, n: int) -> MatchResult:
+    def first(self, n: int):
         new = self.copy()
         size = min(n, len(new.matches))
         new.matches = new.matches[:size]
         return new
 
-    def findHomography(self) -> Optional[List[float]]:
+    def findHomography(self):
         srcKp = self.feature1.kp
         dstKp = self.feature2.kp
 
@@ -110,7 +110,7 @@ class MatchResult(object):
             h = None
         return h
 
-    def getDistances(self) -> List[float]:
+    def getDistances(self):
         """
         distance(特徴空間上の距離)のリストへ変換する
         """

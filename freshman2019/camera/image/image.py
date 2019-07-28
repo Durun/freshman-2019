@@ -36,10 +36,10 @@ class Image(metaclass=ABCMeta):  # abstract class
         """
         raise NotImplementedError
 
-    def toPilImage(self) -> PIL.Image:
+    def toPilImage(self):
         raise NotImplementedError
 
-    def isNChannelCorrect(self) -> bool:
+    def isNChannelCorrect(self):
         raise NotImplementedError
 
     def __init__(self, img):
@@ -53,7 +53,7 @@ class Image(metaclass=ABCMeta):  # abstract class
         logging.debug("new Image %dch %dx%d" %
                       (self.nChannel(), self.data.shape[0], self.data.shape[1]))
 
-    def nChannel(self) -> int:
+    def nChannel(self):
         """
         チャンネル数を返す
         """
@@ -61,7 +61,7 @@ class Image(metaclass=ABCMeta):  # abstract class
         n = shape[2] if len(shape) == 3 else 1
         return n
 
-    def show(self, windowName: str) -> None:
+    def show(self, windowName: str):
         """
         画像をウィンドウに表示
 
@@ -110,7 +110,7 @@ class Image(metaclass=ABCMeta):  # abstract class
                 text: str,
                 position: Tuple[int, int],
                 color: Tuple[int, int, int] = (255, 255, 255)
-                ) -> Image:
+                ):
         """
         テキストを描画
         """
@@ -124,7 +124,7 @@ class Image(metaclass=ABCMeta):  # abstract class
     def putBox(self,
                p1: Tuple[int, int], p2: Tuple[int, int],
                color: Tuple[int, int, int] = (255, 255, 255)
-               ) -> Image:
+               ):
         """
         長方形を描画
         """
@@ -136,7 +136,7 @@ class Image(metaclass=ABCMeta):  # abstract class
                    text: str,
                    p1: Tuple[int, int], p2: Tuple[int, int],
                    color: Tuple[int, int, int] = (255, 255, 255)
-                   ) -> Image:
+                   ):
         """
         長方形+テキストを描画
         """
@@ -144,7 +144,7 @@ class Image(metaclass=ABCMeta):  # abstract class
         self.putText(text, p1, color)
         return self
 
-    def trim(self, p1: Tuple[int, int], p2: Tuple[int, int]) -> Image:
+    def trim(self, p1: Tuple[int, int], p2: Tuple[int, int]):
         """
         矩形で切り取る
         """

@@ -14,11 +14,11 @@ class PanelTrimmer(object):
         self.matcher = CachingMatcher(matcher, trainImage.toGray())
         self.stabler = Stabler(alpha=0.16)  # TODO
 
-    def __getMatchResult(self, queryImage: GrayImage) -> MatchResult:
+    def __getMatchResult(self, queryImage: GrayImage):
         result = self.matcher.matchImage(queryImage)
         return result
 
-    def trim(self, queryImage: Image) -> Image:
+    def trim(self, queryImage: Image):
         query = queryImage.copy().toGray()
         # query = query.normalize_clahe()
         # match
@@ -52,7 +52,7 @@ class Stabler(object):
         self.lastInput = one
         self.lastOutput = one
 
-    def stable(self, nowInput: numpy.ndarray, blend: float = 1.0) -> numpy.ndarray:
+    def stable(self, nowInput: numpy.ndarray, blend: float = 1.0):
         # blend
         nowInput = blend*nowInput + (1-blend)*self.lastOutput
 
@@ -67,7 +67,7 @@ class Stabler(object):
 
         return nowOutput
 
-    def stableSuppressing(self, nowInput: numpy.ndarray) -> numpy.ndarray:
+    def stableSuppressing(self, nowInput: numpy.ndarray):
         # flat = (nowInput - self.lastOutput).flatten()
         # delta = sum([abs(v) for v in flat])
         det = numpy.linalg.det(nowInput)
