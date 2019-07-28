@@ -24,6 +24,10 @@ class Panel(object):
 		GPIO.add_event_callback(PIN_BTN,SystemPowerButton)
 
 
+	def __del__(self):
+		GPIO.cleanup()
+
+
 	#--------------------------------------------
 	#システム電源ボタンが押されたときの割り込み関数
 	#--------------------------------------------
