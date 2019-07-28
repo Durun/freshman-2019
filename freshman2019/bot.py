@@ -277,6 +277,8 @@ class Bot(object):
                 # 失敗
                 # TODO リトライ
                 await reply("温度設定に失敗しました。")
+        except RecognitionError:
+            await self.reply("カメラ画像認識に失敗しました。")
 
     async def usage(self, *args, reply: ReplyType) -> None:
         """
