@@ -17,17 +17,6 @@ USAGE_TEXT = """
 
 
 class Bot(object):
-    camera: Camera
-    panel: Panel
-    rtm: slack.RTMClient
-    api: slack.WebClient
-
-    command_list: dict
-
-    mode: Mode
-
-    __stop_periodic: bool
-
     def __init__(self, camera: Camera, panel: Panel, slack_token: str):
         self.camera = camera
         self.panel = panel
@@ -49,7 +38,8 @@ class Bot(object):
         self.mode = Mode.MANUAL
         self.__stop_periodic = False
 
-        self.rtm.on(event='message', callback=lambda **payload: self.__on_message_received(**payload))
+        self.rtm.on(event='message', callback=lambda **
+                    payload: self.__on_message_received(**payload))
 
     def start(self):
         t1 = self.rtm.start()
@@ -204,9 +194,11 @@ class Bot(object):
             # 差分を計算
             t: str = args[0]
             if t.startswith("+"):
-                delta = min(int(t.lstrip("+")) + current_temp, MAX_TEMP) - current_temp
+                delta = min(int(t.lstrip("+")) + current_temp,
+                            MAX_TEMP) - current_temp
             elif t.startswith("-"):
-                delta = max(current_temp - int(t.lstrip("-")), MIN_TEMP) - current_temp
+                delta = max(current_temp - int(t.lstrip("-")),
+                            MIN_TEMP) - current_temp
             else:
                 delta = max(min(int(t), MAX_TEMP), MIN_TEMP) - current_temp
         except ValueError:
