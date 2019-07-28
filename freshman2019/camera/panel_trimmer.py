@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from .image import Image, GrayImage
 from freshman2019.camera.util import CachingMatcher
 from freshman2019.camera.matching import Matcher, MatchResult
