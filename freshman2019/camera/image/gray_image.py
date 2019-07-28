@@ -147,7 +147,7 @@ class GrayImage(Image):
         self.data = cv2.fastNlMeansDenoising(self.data, None, 10, 7, 21)
         return self
 
-    def mask(self, mask: GrayImage):
+    def mask(self, mask):
         """
         マスクする
         """

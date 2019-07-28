@@ -24,7 +24,7 @@ class Feature(object):
         self.kp = kp
         self.des = des
 
-    def match(self, that: Feature, matcherAlgorithm: cv2.DescriptorMatcher):
+    def match(self, that, matcherAlgorithm: cv2.DescriptorMatcher):
         matches = matcherAlgorithm.match(self.des, that.des)
         return matches
 

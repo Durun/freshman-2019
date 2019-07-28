@@ -113,7 +113,7 @@ class Camera(object):
         tempImage.morph_close(3)
         return tempImage
 
-    def binarizePanel(self, image: GrayImage):
+    def binarizePanel(self, image):
         """
         パネル画像を2値化
         """
@@ -123,7 +123,7 @@ class Camera(object):
         image = image.morph_close(2)
         return image
 
-    def createMask(self, binImage: GrayImage):
+    def createMask(self, binImage):
         """
         数字部分だけを抜き出すためのマスクを作成
         """
