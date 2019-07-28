@@ -9,10 +9,6 @@ from typing import List
 
 
 class Camera(object):
-    queryReader: ImageReader
-    trainReader: ImageReader
-    trimmer: PanelTrimmer
-    recognizer: Recognizer
 
     def __init__(self, deviceNumber: int, trainImageUrl: str):
         """

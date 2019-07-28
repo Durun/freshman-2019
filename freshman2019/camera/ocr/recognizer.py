@@ -18,7 +18,6 @@ class Recognizer(object):
     ------
     OcrNotAvailableError
     """
-    lang: str
 
     def __init__(self, tool, lang: str):
         self.tool = self.__getToolChecking(tool)

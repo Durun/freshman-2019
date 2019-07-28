@@ -9,8 +9,6 @@ import logging
 
 
 class PanelTrimmer(object):
-    matcher: CachingMatcher
-    stabler: Stabler
 
     def __init__(self, trainImage: Image, matcher: Matcher = ORB):
         self.matcher = CachingMatcher(matcher, trainImage.toGray())
@@ -45,9 +43,6 @@ class Stabler(object):
     alpha: 0.0~1.0
         小さいほうがスムーズ
     """
-    alpha: float
-    lastInput: numpy.ndarray
-    lastOutput: numpy.ndarray
 
     def __init__(self, alpha: float):
         self.alpha = alpha

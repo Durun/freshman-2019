@@ -13,10 +13,6 @@ class MatchResult(object):
         特徴点マッチ結果
     """
 
-    feature1: Feature
-    feature2: Feature
-    matches: List[cv2.DMatch]
-
     def __init__(self, feature1: Feature, feature2: Feature, matches: List[cv2.DMatch]):
         self.feature1 = feature1
         self.feature2 = feature2

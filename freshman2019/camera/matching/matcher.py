@@ -9,8 +9,6 @@ class Matcher(object):
     """
     特徴点DetectorとMatcher
     """
-    detectorAlgorithm: cv2.Feature2D
-    matcherAlgorithm: cv2.DescriptorMatcher
 
     def __init__(self,
                  detectorAlgorithm: cv2.Feature2D,

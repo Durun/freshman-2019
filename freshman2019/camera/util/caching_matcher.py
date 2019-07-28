@@ -3,8 +3,6 @@ from freshman2019.camera.matching import Feature, Matcher, MatchResult
 
 
 class CachingMatcher(object):
-    matcher: Matcher
-    trainFeature: Feature
 
     def __init__(self, matcher: Matcher, trainImage: GrayImage):
         self.matcher = matcher

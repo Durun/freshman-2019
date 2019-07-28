@@ -18,9 +18,6 @@ class Feature(object):
         KeyPoint
     des
     """
-    img: Image
-    kp: List[cv2.KeyPoint]
-    des: numpy.ndarray
 
     def __init__(self, img, kp, des):
         self.img = img

@@ -32,7 +32,6 @@ class FileImageReader(ImageReader):
     """
     ファイルからColorImageをreadするもの.
     """
-    filePath: str
 
     def __init__(self, filePath: str):
         assert os.path.isfile(filePath), "ファイル "+filePath+" は存在しません"
@@ -54,8 +53,6 @@ class UrlImageReader(ImageReader):
         画像を保存する一時ファイル.
         インスタンス終了時に自動で削除されます.
     """
-    url: str
-    file: IO[Any]
 
     def __init__(self, url: str):
         self.url = url
@@ -102,7 +99,6 @@ class CameraImageReader(ImageReader):
     """
     カメラデバイスからColorImageをreadするもの.
     """
-    capture: cv2.VideoCapture
 
     bufferSize = 1
 

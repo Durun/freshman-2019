@@ -23,7 +23,6 @@ class Image(metaclass=ABCMeta):  # abstract class
     data : numpy.ndarray
         画像を表すnumpy配列.
     """
-    data: numpy.ndarray
 
     def copy(self):
         """
